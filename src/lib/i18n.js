@@ -72,20 +72,36 @@ export const it = {
 		new_booking: '+ Nuova Prenotazione',
 		create_booking: 'Crea Nuova Prenotazione',
 		date: 'Data',
-		start_time: 'Ora Inizio',
-		end_time: 'Ora Fine',
+		start_time: 'Inizio',
+		end_time: 'Fine',
 		notes: 'Note (opzionale)',
-		create_button: 'Crea Prenotazione',
+		notes_placeholder: 'Aggiungi note speciali...',
+		create_button: 'Conferma Prenotazione',
+		confirm_button: 'Conferma Prenotazione',
 		cancel: 'Annulla',
 		booking_created: 'Prenotazione creata con successo! In attesa della conferma del gestore.',
+		booking_error: 'Impossibile creare la prenotazione',
 		booking_limit_error: 'Hai raggiunto il limite di 2 ore al giorno',
 		conflict_error: 'Questo orario è già prenotato',
-		no_bookings: 'Nessuna prenotazione',
+		no_bookings: 'Nessuna prenotazione ancora. Crea una per iniziare!',
 		status: 'Stato',
 		pending: 'In Attesa',
 		confirmed: 'Confermato',
 		cancelled: 'Cancellato',
-		actions: 'Azioni'
+		completed: 'Completato',
+		actions: 'Azioni',
+		duration: 'Durata',
+		minutes: 'minuti',
+		select_time: '-- Seleziona orario --',
+		hours_short: 'h',
+		min_short: 'min',
+		duration_info: '⏱️ Durata',
+		duration_valid: '✓ Valido',
+		duration_max_error: '❌ Supera il limite di 2 ore!',
+		duration_reduce: 'Riduci la durata a massimo 2 ore (120 minuti)',
+		error_end_after_start: 'L\'ora di fine deve essere successiva all\'ora di inizio',
+		error_max_duration: 'La prenotazione non può superare 2 ore. Durata attuale',
+		manage_bookings: 'Gestisci le tue prenotazioni del campo da tennis'
 	},
 
 	// Admin
@@ -104,7 +120,15 @@ export const it = {
 		manager_role: 'Gestore',
 		user_role: 'Utente',
 		user_created: 'Utente creato con successo!',
-		user_error: 'Errore nella creazione dell\'utente'
+		user_error: 'Errore nella creazione dell\'utente',
+		required_fields: 'Tutti i campi sono obbligatori',
+		temp_password: 'Password temporanea',
+		delete_user: '🗑️ Elimina',
+		user_deleted: 'Utente eliminato con successo!',
+		delete_user_error: 'Errore nell\'eliminazione dell\'utente',
+		confirm_delete_user: 'Sei sicuro di voler eliminare questo utente? Questa azione è irreversibile!',
+		verified: 'Verificato',
+		actions: 'Azioni'
 	},
 
 	// Manager
@@ -119,6 +143,19 @@ export const it = {
 		cancelled: 'Prenotazione cancellata!',
 		booking_confirmed: 'Prenotazione confermata',
 		booking_cancelled: 'Prenotazione cancellata'
+	},
+
+	// Calendar
+	calendar: {
+		title: 'Calendario Prenotazioni',
+		subtitle: 'Visualizza le disponibilità dei campi',
+		previous_day: '← Giorno Precedente',
+		next_day: 'Giorno Successivo →',
+		jump_to_date: 'Salta a data',
+		go_button: '✓ Vai',
+		available: 'Disponibile ✓',
+		loading: 'Caricamento...',
+		booked_by: 'Prenotato da'
 	},
 
 	// Privacy & GDPR

@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 import { db } from '$lib/server/db.js';
-import { generateId, hashPassword } from '$lib/server/auth.js';
 
 export async function GET({ locals }) {
 	try {

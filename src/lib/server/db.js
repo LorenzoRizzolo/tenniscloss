@@ -7,6 +7,7 @@ const dbPath = path.join(__dirname, '../../data.db');
 
 export const db = new Database(dbPath);
 db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = OFF');
 
 export function initializeDatabase() {
 	// Users table
@@ -21,8 +22,7 @@ export function initializeDatabase() {
 			is_verified INTEGER DEFAULT 0,
 			created_by TEXT,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-			updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-			FOREIGN KEY (created_by) REFERENCES users(id)
+			updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		);
 
 		CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);

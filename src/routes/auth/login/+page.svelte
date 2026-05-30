@@ -5,6 +5,7 @@ import Footer from '$components/Footer.svelte';
 
 let email = $state('');
 let password = $state('');
+let showPassword = $state(false);
 let isLoading = $state(false);
 let message = $state('');
 let isError = $state(false);
@@ -87,14 +88,28 @@ placeholder="tua@email.com"
 
 <div>
 <label for="password" class="block text-white text-sm font-bold mb-2">Password</label>
+<div class="relative">
 <input
-type="password"
+type={showPassword ? 'text' : 'password'}
 id="password"
 bind:value={password}
 required
-class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none transition"
+class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none transition pr-10"
 placeholder="••••••••"
 />
+<button
+type="button"
+onclick={() => (showPassword = !showPassword)}
+class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition"
+title={showPassword ? 'Nascondi' : 'Mostra'}
+>
+{#if showPassword}
+👁️
+{:else}
+👁️‍🗨️
+{/if}
+</button>
+</div>
 </div>
 
 <button

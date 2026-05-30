@@ -23,11 +23,11 @@
 			</div>
 			<div>
 				<h4 class="font-bold mb-4">Contatti</h4>
-				<p class="text-slate-400">📧 privacy@tennisborgatacloss.it</p>
+				<p class="text-slate-400">📧 lorenzo.rizzolo@rizzolo.cloud</p>
 			</div>
 		</div>
 		<div class="border-t border-slate-700 pt-8 text-center text-slate-400">
-			<p>© 2024 Tennis Borgata Closs. Tutti i diritti riservati.</p>
+			<!-- <p>© 2024 Tennis Borgata Closs. Tutti i diritti riservati.</p> -->
 			<p class="mt-2">
 				Powered by <a href="https://rizzolo.cloud" class="text-purple-400 hover:text-purple-300" target="_blank" rel="noopener noreferrer">Rizzolo.cloud</a>
 			</p>

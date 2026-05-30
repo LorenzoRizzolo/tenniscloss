@@ -35,7 +35,10 @@
 				{#if userRole === 'gestore' || userRole === 'admin'}
 					<a href="/gestore" class="text-slate-300 hover:text-white transition">Gestore</a>
 				{/if}
-				<a href="/dashboard" class="text-slate-300 hover:text-white transition">Dashboard</a>
+				{#if userRole != 'admin'}
+					<a href="/dashboard" class="text-slate-300 hover:text-white transition">Dashboard</a>
+				{/if}
+				<a href="/calendar" class="text-slate-300 hover:text-white transition">📅 Calendario</a>
 				<button
 					onclick={logout}
 					class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
@@ -70,7 +73,14 @@
 		<div class="md:hidden bg-slate-800 px-4 py-4 space-y-3">
 			<a href="/" class="block text-slate-300 hover:text-white">Home</a>
 			{#if isLoggedIn}
+				{#if userRole === 'admin'}
+					<a href="/admin" class="block text-slate-300 hover:text-white">Admin</a>
+				{/if}
+				{#if userRole === 'gestore'}
+					<a href="/gestore" class="block text-slate-300 hover:text-white">Gestore</a>
+				{/if}
 				<a href="/dashboard" class="block text-slate-300 hover:text-white">Dashboard</a>
+				<a href="/calendar" class="block text-slate-300 hover:text-white">📅 Calendario</a>
 				<button
 					onclick={logout}
 					class="w-full text-left px-4 py-2 bg-red-600 text-white rounded"

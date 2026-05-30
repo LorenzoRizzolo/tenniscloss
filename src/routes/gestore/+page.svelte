@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
+	import { translateStatus } from '$lib';
 
 	let user = $state(null);
 	let bookings = $state([]);
@@ -38,6 +39,7 @@
 
 			if (response.ok) {
 				bookings = (await response.json()).bookings || [];
+				console.log('Bookings loaded:', bookings);
 			}
 		} catch (error) {
 			console.error('Errore nel caricamento delle prenotazioni:', error);
@@ -142,23 +144,23 @@
 										<td class="py-3">{booking.duration_minutes} min</td>
 										<td class="py-3">
 											<span class="px-2 py-1 rounded text-xs font-bold {getStatusBadge(booking.status)}">
-												{booking.status.toUpperCase()}
+												{translateStatus(booking.status)}
 											</span>
 										</td>
 										<td class="py-3">
 											<div class="flex gap-2">
-												{#if booking.status === 'in sospeso'}
+												{#if booking.status === 'pending'}
 													<button
-														onclick={() => updateBooking(booking.id, 'confermato')}
+														onclick={() => updateBooking(booking.id, 'confirmed')}
 														class="px-2 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700"
 													>
-														✓ Confirm
+														✓ conferma
 													</button>
 													<button
-														onclick={() => updateBooking(booking.id, 'cancellato')}
+														onclick={() => updateBooking(booking.id, 'cancelled')}
 														class="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
 													>
-														✗ Cancel
+														✗ cancella
 													</button>
 												{/if}
 											</div>

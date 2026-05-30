@@ -8,9 +8,9 @@ export async function POST({ request, locals }) {
 			return json({ error: 'Unauthorized' }, { status: 403 });
 		}
 
-		const { email, name, surname, role } = await request.json();
+		const { email, password, name, surname, role } = await request.json();
 
-		if (!email || !name || !surname || !role) {
+		if (!email || !password || !name || !surname || !role) {
 			return json({ error: 'All fields are required' }, { status: 400 });
 		}
 
@@ -26,13 +26,12 @@ export async function POST({ request, locals }) {
 
 		// Create user with temporary password
 		const userId = generateId();
-		const tempPassword = generateId().slice(0, 12);
-		const passwordHash = await hashPassword(tempPassword);
+		const passwordHash = await hashPassword(password);
 
 		db.prepare(
 			`INSERT INTO users (id, email, name, surname, password_hash, role, is_verified, created_by)
 			 VALUES (?, ?, ?, ?, ?, ?, 1, ?)`
-		).run(userId, email, name, surname, passwordHash, role, locals.user.userId);
+		).run(userId, email, name, surname, passwordHash, role, locals.user?.userId || null);
 
 		return json({
 			success: true,
@@ -43,7 +42,7 @@ export async function POST({ request, locals }) {
 				name,
 				surname,
 				role,
-				tempPassword
+				tempPassword: password // Return the temporary password for admin reference
 			}
 		});
 	} catch (error) {

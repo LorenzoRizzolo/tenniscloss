@@ -16,10 +16,8 @@ function getUserBookingMinutesToday(userId, bookingDate) {
 }
 
 function getManagerEmail() {
-	const manager = db
-		.prepare('SELECT email FROM users WHERE role IN ("admin", "gestore") ORDER BY role DESC LIMIT 1')
-		.get();
-	return manager?.email;
+	// Use admin email from environment, fallback to db if available
+	return process.env.ADMIN_EMAIL || 'admin@tennisborgatacloss.it';
 }
 
 export async function POST({ request, locals }) {
@@ -61,18 +59,18 @@ export async function POST({ request, locals }) {
 			);
 		}
 
-		// Check for conflicts
+		// Check for conflicts with other bookings
 		const conflict = db
 			.prepare(
 				`SELECT id FROM bookings 
-				 WHERE booking_date = ? AND status IN ('confirmed', 'pending')
+				 WHERE booking_date = ? 
+				 AND status IN ('confirmed', 'pending')
 				 AND (
 					(start_time < ? AND end_time > ?)
-					OR (start_time < ? AND end_time > ?)
-					OR (start_time >= ? AND end_time <= ?)
+					OR (start_time >= ? AND start_time < ?)
 				 )`
 			)
-			.get(bookingDate, endTime, startTime, endTime, startTime, startTime, endTime);
+			.get(bookingDate, endTime, startTime, startTime, endTime);
 
 		if (conflict) {
 			return json({ error: 'Time slot is already booked' }, { status: 400 });
@@ -128,7 +126,7 @@ export async function GET({ locals }) {
 			return json({ error: 'Unauthorized' }, { status: 401 });
 		}
 
-		let query = 'SELECT * FROM bookings WHERE user_id = ? ORDER BY booking_date DESC';
+		let query = 'SELECT * FROM bookings WHERE user_id = ? ORDER BY booking_date DESC, start_time DESC';
 		const bookings = db.prepare(query).all(user.userId);
 
 		return json({ bookings });
