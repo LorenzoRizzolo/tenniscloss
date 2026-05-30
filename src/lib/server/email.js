@@ -3,10 +3,13 @@ import nodemailer from 'nodemailer';
 let transporter;
 
 export function initializeEmailService() {
+	const port = parseInt(process.env.SMTP_PORT || '587');
+	const secure = port === 465 ? true : false; // Use TLS for 587, SSL for 465
+	
 	transporter = nodemailer.createTransport({
 		host: process.env.SMTP_HOST || 'smtp.gmail.com',
-		port: parseInt(process.env.SMTP_PORT || '587'),
-		secure: false,
+		port: port,
+		secure: secure,
 		auth: {
 			user: process.env.EMAIL_USER,
 			pass: process.env.EMAIL_PASSWORD
@@ -21,21 +24,21 @@ export async function sendOTPEmail(email, otp, name) {
 		const mailOptions = {
 			from: process.env.EMAIL_USER,
 			to: email,
-			subject: `🎾 Tennis Borgata Closs - Your Verification Code`,
+			subject: `🎾 Tennis Borgata Closs - Il Tuo Codice di Verifica`,
 			html: `
 				<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
 					<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; color: white; text-align: center; border-radius: 10px 10px 0 0;">
 						<h1>🎾 Tennis Borgata Closs</h1>
-						<p>Email Verification</p>
+						<p>Verifica Email</p>
 					</div>
 					<div style="background: #f9f9f9; padding: 30px; text-align: center;">
-						<p>Hello <strong>${name}</strong>,</p>
-						<p>Thank you for registering with Tennis Borgata Closs! Your verification code is:</p>
+						<p>Ciao <strong>${name}</strong>,</p>
+						<p>Grazie per esserti registrato a Tennis Borgata Closs! Il tuo codice di verifica è:</p>
 						<div style="background: white; padding: 20px; margin: 20px 0; border-radius: 8px; font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #667eea;">
 							${otp}
 						</div>
-						<p style="color: #666;">This code will expire in 10 minutes.</p>
-						<p style="color: #999; font-size: 12px;">If you didn't register for this account, please ignore this email.</p>
+						<p style="color: #666;">Questo codice scadrà in 10 minuti.</p>
+						<p style="color: #999; font-size: 12px;">Se non ti sei registrato su questo account, ignora questa email.</p>
 					</div>
 					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
 						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
@@ -59,22 +62,22 @@ export async function sendBookingConfirmationEmail(email, name, bookingDate, sta
 		const mailOptions = {
 			from: process.env.EMAIL_USER,
 			to: email,
-			subject: `🎾 Booking Confirmation - Tennis Borgata Closs`,
+			subject: `🎾 Prenotazione Confermata - Tennis Borgata Closs`,
 			html: `
 				<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
 					<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; color: white; text-align: center; border-radius: 10px 10px 0 0;">
 						<h1>🎾 Tennis Borgata Closs</h1>
-						<p>Booking Confirmation</p>
+						<p>Conferma Prenotazione</p>
 					</div>
 					<div style="background: #f9f9f9; padding: 30px;">
-						<p>Dear <strong>${name}</strong>,</p>
-						<p>Your booking has been confirmed! Here are the details:</p>
+						<p>Caro <strong>${name}</strong>,</p>
+						<p>La tua prenotazione è stata confermata! Ecco i dettagli:</p>
 						<div style="background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #667eea;">
-							<p><strong>Booking ID:</strong> ${bookingId}</p>
-							<p><strong>Date:</strong> ${bookingDate}</p>
-							<p><strong>Time:</strong> ${startTime} - ${endTime}</p>
+							<p><strong>ID Prenotazione:</strong> ${bookingId}</p>
+							<p><strong>Data:</strong> ${bookingDate}</p>
+							<p><strong>Orario:</strong> ${startTime} - ${endTime}</p>
 						</div>
-						<p style="color: #666;">Please arrive 10 minutes before your booking time.</p>
+						<p style="color: #666;">Ti preghiamo di arrivare 10 minuti prima dell'orario della tua prenotazione.</p>
 					</div>
 					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
 						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
@@ -95,8 +98,8 @@ export async function sendManagerBookingNotification(managerEmail, userName, boo
 	try {
 		if (!transporter) initializeEmailService();
 
-		const subject = action === 'new' ? '🎾 New Booking - Requires Confirmation' : '🎾 Booking Cancelled';
-		const actionText = action === 'new' ? 'NEW BOOKING - REQUIRES CONFIRMATION' : 'BOOKING CANCELLED';
+		const subject = action === 'new' ? '🎾 Nuova Prenotazione - Richiede Conferma' : '🎾 Prenotazione Cancellata';
+		const actionText = action === 'new' ? 'NUOVA PRENOTAZIONE - RICHIEDE CONFERMA' : 'PRENOTAZIONE CANCELLATA';
 
 		const mailOptions = {
 			from: process.env.EMAIL_USER,
@@ -109,14 +112,14 @@ export async function sendManagerBookingNotification(managerEmail, userName, boo
 						<p>${actionText}</p>
 					</div>
 					<div style="background: #f9f9f9; padding: 30px;">
-						<p>Hello Manager,</p>
+						<p>Ciao Gestore,</p>
 						<div style="background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #667eea;">
-							<p><strong>User:</strong> ${userName}</p>
-							<p><strong>Booking ID:</strong> ${bookingId}</p>
-							<p><strong>Date:</strong> ${bookingDate}</p>
-							<p><strong>Time:</strong> ${startTime} - ${endTime}</p>
+							<p><strong>Utente:</strong> ${userName}</p>
+							<p><strong>ID Prenotazione:</strong> ${bookingId}</p>
+							<p><strong>Data:</strong> ${bookingDate}</p>
+							<p><strong>Orario:</strong> ${startTime} - ${endTime}</p>
 						</div>
-						<p style="color: #666;">Please log in to the dashboard to manage this booking.</p>
+						<p style="color: #666;">Accedi alla dashboard per gestire questa prenotazione.</p>
 					</div>
 					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
 						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
