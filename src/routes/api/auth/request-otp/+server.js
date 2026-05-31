@@ -28,7 +28,8 @@ export async function POST({ request }) {
 			.prepare('SELECT id FROM otp_codes WHERE email = ? AND expires_at > ?')
 			.get(email, new Date().toISOString());
 		if (existingOTP) {
-			return json({ error: 'An OTP was recently sent. Please check your email.' }, { status: 400 });
+			// elimina otp  esistente
+			db.prepare('DELETE FROM otp_codes WHERE id = ?').run(existingOTP.id);
 		}
 
 		// Generate OTP

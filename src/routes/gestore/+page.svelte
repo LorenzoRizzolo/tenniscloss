@@ -7,6 +7,7 @@
 
 	let user = $state(null);
 	let bookings = $state([]);
+	let pendingUsers = $state([]);
 	let isLoading = $state(true);
 	let message = $state('');
 	let isError = $state(false);
@@ -27,7 +28,83 @@
 		}
 
 		fetchBookings();
+		fetchPendingUsers();
 	});
+
+	async function fetchPendingUsers() {
+		try {
+			const response = await fetch('/api/admin/users', {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('authToken')}`
+				}
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				pendingUsers = (data.users || []).filter(u => u.role === 'utente' && !u.is_approved);
+			}
+		} catch (error) {
+			console.error('Errore nel caricamento utenti:', error);
+		}
+	}
+
+	async function approveUser(userId) {
+		try {
+			const response = await fetch(`/api/admin/users/${userId}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('authToken')}`
+				},
+				body: JSON.stringify({ action: 'approve' })
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				message = 'Utente approvato con successo';
+				isError = false;
+				fetchPendingUsers();
+			} else {
+				isError = true;
+				message = data.error || 'Errore approvazione utente';
+			}
+		} catch (error) {
+			isError = true;
+			message = 'Errore approvazione utente';
+		}
+	}
+
+	async function rejectUser(userId) {
+		if (!confirm('Sei sicuro di voler rifiutare questo utente? Verrà rimosso dal sistema.')) {
+			return;
+		}
+
+		try {
+			const response = await fetch(`/api/admin/users/${userId}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('authToken')}`
+				},
+				body: JSON.stringify({ action: 'reject' })
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				message = 'Utente rifiutato e rimosso';
+				isError = false;
+				fetchPendingUsers();
+			} else {
+				isError = true;
+				message = data.error || 'Errore rifiuto utente';
+			}
+		} catch (error) {
+			isError = true;
+			message = 'Errore rifiuto utente';
+		}
+	}
 
 	async function fetchBookings() {
 		try {
@@ -107,6 +184,50 @@
 					class="mb-6 p-4 rounded {isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/30 text-green-300'}"
 				>
 					{message}
+				</div>
+			{/if}
+
+			<!-- Pending Users Section -->
+			{#if pendingUsers.length > 0}
+				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-8">
+					<h2 class="text-2xl font-bold text-white mb-6">👥 Utenti in Attesa di Approvazione ({pendingUsers.length})</h2>
+					<div class="overflow-x-auto">
+						<table class="w-full text-left text-slate-300 text-sm">
+							<thead class="border-b border-slate-700">
+								<tr>
+									<th class="pb-3">Nome</th>
+									<th class="pb-3">Email</th>
+									<th class="pb-3">Registrato il</th>
+									<th class="pb-3">Azioni</th>
+								</tr>
+							</thead>
+							<tbody>
+								{#each pendingUsers as pendingUser}
+									<tr class="border-b border-slate-700 hover:bg-slate-700/50">
+										<td class="py-3">{pendingUser.name} {pendingUser.surname}</td>
+										<td class="py-3">{pendingUser.email}</td>
+										<td class="py-3">{new Date(pendingUser.created_at).toLocaleDateString('it-IT')}</td>
+										<td class="py-3">
+											<div class="flex gap-2">
+												<button
+													onclick={() => approveUser(pendingUser.id)}
+													class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold transition"
+												>
+													✓ Approva
+												</button>
+												<button
+													onclick={() => rejectUser(pendingUser.id)}
+													class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold transition"
+												>
+													✗ Rifiuta
+												</button>
+											</div>
+										</td>
+									</tr>
+								{/each}
+							</tbody>
+						</table>
+					</div>
 				</div>
 			{/if}
 

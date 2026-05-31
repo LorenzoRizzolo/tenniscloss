@@ -8,7 +8,7 @@ export async function GET({ locals }) {
 		}
 
 		const users = db
-			.prepare('SELECT id, email, name, surname, role, is_verified, created_at FROM users ORDER BY created_at DESC')
+			.prepare('SELECT id, email, name, surname, role, is_verified, is_approved, approved_at, created_at FROM users ORDER BY created_at DESC')
 			.all();
 
 		return json({ users });

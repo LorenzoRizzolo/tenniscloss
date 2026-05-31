@@ -181,7 +181,7 @@
 					/>
 					<button
 						onclick={jumpToDate}
-						class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded transition"
+						class="px-6 py-2 bg-[#C5A94E] hover:bg-[#8FBC8F] text-white font-bold rounded transition"
 					>
 						✓ Vai
 					</button>

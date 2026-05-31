@@ -55,7 +55,7 @@
 				document.cookie = `authToken=${data.token}; path=/; max-age=${7 * 24 * 60 * 60}`;
 				
 				message = "Registrazione avvenuta con successo! Reindirizzamento...";
-				setTimeout(() => goto('/dashboard'), 1500);
+				setTimeout(() => goto('/auth/login'), 1500);
 			} else {
 				isError = true;
 				if (Array.isArray(data.error)) {
@@ -101,7 +101,7 @@
 						bind:value={otp}
 						maxlength="6"
 						required
-						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none transition text-center text-2xl tracking-widest"
+						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition text-center text-2xl tracking-widest"
 						placeholder="000000"
 					/>
 					<p class="text-slate-400 text-sm mt-2">Controlla la tua email per il codice a 6 cifre</p>
@@ -115,7 +115,7 @@
 							id="password"
 							bind:value={password}
 							required
-							class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none transition pr-10"
+							class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition pr-10"
 							placeholder="Almeno 8 caratteri"
 						/>
 						<button
@@ -146,7 +146,7 @@
 							id="passwordConfirm"
 							bind:value={passwordConfirm}
 							required
-							class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none transition pr-10"
+							class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition pr-10"
 							placeholder="Conferma password"
 						/>
 						<button
@@ -167,14 +167,14 @@
 				<button
 					type="submit"
 					disabled={isLoading || !otp || !password || !passwordConfirm}
-					class="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded hover:shadow-lg hover:shadow-purple-500/50 disabled:opacity-50 transition"
+					class="w-full py-3 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#C5A94E]/50 disabled:opacity-50 transition"
 				>
 					{isLoading ? "Verifica in corso..." : "Verifica e Completa Registrazione"}
 				</button>
 			</form>
 
 			<p class="text-center text-slate-400 mt-6 text-sm">
-				<a href="/auth/register" class="text-purple-400 hover:text-purple-300">Torna alla registrazione</a>
+				<a href="/auth/register" class="text-[#C5A94E] hover:text-[#8FBC8F]">Torna alla registrazione</a>
 			</p>
 		</div>
 	</div>

@@ -26,6 +26,9 @@ export async function POST({ request }) {
 			if (!user.is_verified) {
 				return json({ error: 'Email not verified. Please complete registration.' }, { status: 401 });
 			}
+			if (!user.is_approved) {
+				return json({ error: 'Account non ancora approvato da un amministratore. Riceverai una notifica via email quando sara approvato.' }, { status: 401 });
+			}
 			// Verify password
 			const passwordMatch = await verifyPassword(password, user.password_hash);
 			if (!passwordMatch) {

@@ -68,7 +68,7 @@
 					</p>
 				</section>
 
-				<section class="bg-purple-900/30 p-4 rounded border border-purple-700 mt-6">
+				<section class="bg-[#C5A94E]/20 p-4 rounded border border-[#C5A94E] mt-6">
 					<h3 class="text-xl font-bold text-white mb-2">Request Your Rights</h3>
 					<p>
 						To exercise any of these rights, please send a written request to:

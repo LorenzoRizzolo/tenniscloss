@@ -72,7 +72,7 @@
 						id="name"
 						bind:value={name}
 						required
-						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none transition"
+						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition"
 						placeholder="Il tuo nome"
 					/>
 				</div>
@@ -84,7 +84,7 @@
 						id="surname"
 						bind:value={surname}
 						required
-						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none transition"
+						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition"
 						placeholder="Il tuo cognome"
 					/>
 				</div>
@@ -96,7 +96,7 @@
 						id="email"
 						bind:value={email}
 						required
-						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none transition"
+						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition"
 						placeholder="tua@email.com"
 					/>
 				</div>
@@ -104,7 +104,7 @@
 				<button
 					type="submit"
 					disabled={isLoading}
-					class="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded hover:shadow-lg hover:shadow-purple-500/50 disabled:opacity-50 transition"
+					class="w-full py-3 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#C5A94E]/50 disabled:opacity-50 transition"
 				>
 					{isLoading ? "Invio in corso..." : "Invia Codice di Verifica"}
 				</button>
@@ -112,7 +112,7 @@
 
 			<p class="text-center text-slate-400 mt-6">
 				Già registrato?
-				<a href="/auth/login" class="text-purple-400 hover:text-purple-300 font-bold">Accedi</a>
+				<a href="/auth/login" class="text-[#C5A94E] hover:text-[#8FBC8F] font-bold">Accedi</a>
 			</p>
 		</div>
 	</div>

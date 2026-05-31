@@ -41,13 +41,13 @@
 		<div class="absolute inset-0 bg-[url('/noise.svg')] opacity-5"></div>
 		<div class="absolute inset-0">
 			<div
-				class="absolute top-0 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"
+				class="absolute top-0 -left-40 w-80 h-80 bg-[#C5A94E] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"
 			></div>
 			<div
 				class="absolute top-0 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"
 			></div>
 			<div
-				class="absolute -bottom-8 left-20 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"
+				class="absolute -bottom-8 left-20 w-80 h-80 bg-[#8FBC8F] rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"
 			></div>
 		</div>
 
@@ -61,7 +61,7 @@
 			<div class="flex gap-4 justify-center flex-wrap">
 				<a
 					href="/auth/register"
-					class="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition transform hover:scale-105"
+					class="px-8 py-3 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded-lg hover:shadow-lg hover:shadow-[#C5A94E]/50 transition transform hover:scale-105"
 				>
 					Inizia Ora
 				</a>
@@ -79,17 +79,17 @@
 	<!-- <section class="py-20 px-4 md:px-8 max-w-6xl mx-auto">
 		<h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-16">Why Choose Us?</h2>
 		<div class="grid md:grid-cols-3 gap-8">
-			<div data-animate class="p-8 bg-slate-800 rounded-lg border border-slate-700 hover:border-purple-500 transition opacity-0" style="animation: fadeInUp 0.6s ease-out forwards;">
+			<div data-animate class="p-8 bg-slate-800 rounded-lg border border-slate-700 hover:border-[#C5A94E] transition opacity-0" style="animation: fadeInUp 0.6s ease-out forwards;">
 				<div class="text-4xl mb-4">⚡</div>
 				<h3 class="text-xl font-bold text-white mb-3">Instant Booking</h3>
 				<p class="text-slate-400">Book your court instantly with our simple and intuitive interface</p>
 			</div>
-			<div data-animate class="p-8 bg-slate-800 rounded-lg border border-slate-700 hover:border-purple-500 transition opacity-0" style="animation: fadeInUp 0.6s ease-out 0.1s forwards;">
+			<div data-animate class="p-8 bg-slate-800 rounded-lg border border-slate-700 hover:border-[#C5A94E] transition opacity-0" style="animation: fadeInUp 0.6s ease-out 0.1s forwards;">
 				<div class="text-4xl mb-4">🔒</div>
 				<h3 class="text-xl font-bold text-white mb-3">Secure & Safe</h3>
 				<p class="text-slate-400">Your data is protected with enterprise-grade security</p>
 			</div>
-			<div data-animate class="p-8 bg-slate-800 rounded-lg border border-slate-700 hover:border-purple-500 transition opacity-0" style="animation: fadeInUp 0.6s ease-out 0.2s forwards;">
+			<div data-animate class="p-8 bg-slate-800 rounded-lg border border-slate-700 hover:border-[#C5A94E] transition opacity-0" style="animation: fadeInUp 0.6s ease-out 0.2s forwards;">
 				<div class="text-4xl mb-4">📱</div>
 				<h3 class="text-xl font-bold text-white mb-3">Mobile Ready</h3>
 				<p class="text-slate-400">Access your bookings anytime, anywhere on any device</p>
@@ -100,7 +100,7 @@
 	<!-- Pricing Section -->
 	<section class="py-20 px-4 md:px-8 max-w-6xl mx-auto">
 		<h2 class="text-4xl md:text-5xl font-bold text-white text-center mb-16">Limiti di Prenotazione</h2>
-		<div class="bg-gradient-to-r from-purple-600 to-pink-600 p-12 rounded-2xl text-center">
+		<div class="bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] p-12 rounded-2xl text-center">
 			<p class="text-white text-lg mb-4">Massima prenotazione giornaliera</p>
 			<p class="text-6xl font-bold text-white mb-4">2 ORE</p>
 			<p class="text-white text-opacity-90">Al giorno per garantire accesso equo a tutti i giocatori</p>
@@ -112,7 +112,7 @@
 		<div class="max-w-4xl mx-auto">
 			<p class="text-slate-300 text-sm text-center">
 				🔐 Siamo conformi al GDPR e rispettiamo la tua privacy. Tutti i dati personali sono gestiti in modo sicuro. Utilizzando questa piattaforma, accetti la nostra Politica sulla Privacy e la Politica sui Cookie.
-				<a href="/privacy" class="text-purple-400 hover:text-purple-300"> Scopri di più</a>
+				<a href="/privacy" class="text-[#C5A94E] hover:text-[#8FBC8F]"> Scopri di più</a>
 			</p>
 		</div>
 	</section>

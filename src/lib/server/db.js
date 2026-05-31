@@ -20,6 +20,9 @@ export function initializeDatabase() {
 			password_hash TEXT NOT NULL,
 			role TEXT CHECK(role IN ('admin', 'gestore', 'utente')) DEFAULT 'utente',
 			is_verified INTEGER DEFAULT 0,
+			is_approved INTEGER DEFAULT 0,
+			approved_by TEXT,
+			approved_at DATETIME,
 			created_by TEXT,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 			updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -117,6 +120,21 @@ export function initializeDatabase() {
 		CREATE INDEX IF NOT EXISTS idx_media_category ON media(category);
 		CREATE INDEX IF NOT EXISTS idx_gdpr_user ON gdpr_consents(user_id);
 	`);
+
+	// Migration: add is_approved, approved_by, approved_at columns if they don't exist
+	try {
+		db.exec(`ALTER TABLE users ADD COLUMN is_approved INTEGER DEFAULT 0`);
+	} catch (e) { /* column already exists */ }
+	try {
+		db.exec(`ALTER TABLE users ADD COLUMN approved_by TEXT`);
+	} catch (e) { /* column already exists */ }
+	try {
+		db.exec(`ALTER TABLE users ADD COLUMN approved_at DATETIME`);
+	} catch (e) { /* column already exists */ }
+
+	// Approve all existing verified users that aren't approved yet
+	db.prepare(`UPDATE users SET is_approved = 1 WHERE is_verified = 1 AND is_approved = 0`).run();
 }
 
 export default db;
+

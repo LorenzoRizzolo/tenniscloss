@@ -137,3 +137,79 @@ export async function sendManagerBookingNotification(managerEmail, userName, boo
 		return false;
 	}
 }
+
+export async function sendApprovalNotificationEmail(email, name) {
+	try {
+		if (!transporter) initializeEmailService();
+
+		const mailOptions = {
+			from: process.env.EMAIL_USER,
+			to: email,
+			subject: `🎾 Tennis Borgata Closs - Account Approvato`,
+			html: `
+				<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+					<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; color: white; text-align: center; border-radius: 10px 10px 0 0;">
+						<h1>🎾 Tennis Borgata Closs</h1>
+						<p>Account Approvato</p>
+					</div>
+					<div style="background: #f9f9f9; padding: 30px; text-align: center;">
+						<p>Ciao <strong>${name}</strong>,</p>
+						<p>Il tuo account per Tennis Borgata Closs è stato <strong>approvato</strong>!</p>
+						<p>Ora puoi accedere alla piattaforma e prenotare i campi da tennis.</p>
+						<div style="background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #667eea;">
+							<p style="margin: 0; color: #333;">Accedi subito con le tue credenziali per iniziare a prenotare!</p>
+						</div>
+						<p style="color: #666;">Benvenuto nella community!</p>
+					</div>
+					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
+						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
+					</div>
+				</div>
+			`
+		};
+
+		await transporter.sendMail(mailOptions);
+		return true;
+	} catch (error) {
+		console.error('Email send error:', error);
+		return false;
+	}
+}
+
+export async function sendNewRegistrationNotification(managerEmail, userName, userEmail) {
+	try {
+		if (!transporter) initializeEmailService();
+
+		const mailOptions = {
+			from: process.env.EMAIL_USER,
+			to: managerEmail,
+			subject: `🎾 Tennis Borgata Closs - Nuovo Utente in Attesa di Approvazione`,
+			html: `
+				<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+					<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; color: white; text-align: center; border-radius: 10px 10px 0 0;">
+						<h1>🎾 Tennis Borgata Closs</h1>
+						<p>NUOVO UTENTE IN ATTESA DI APPROVAZIONE</p>
+					</div>
+					<div style="background: #f9f9f9; padding: 30px;">
+						<p>Ciao Gestore,</p>
+						<p>Un nuovo utente si è registrato ed è in attesa di approvazione:</p>
+						<div style="background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #667eea;">
+							<p><strong>Nome:</strong> ${userName}</p>
+							<p><strong>Email:</strong> ${userEmail}</p>
+						</div>
+						<p style="color: #666;">Accedi al pannello di gestione per approvare o rifiutare la richiesta.</p>
+					</div>
+					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
+						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
+					</div>
+				</div>
+			`
+		};
+
+		await transporter.sendMail(mailOptions);
+		return true;
+	} catch (error) {
+		console.error('Email send error:', error);
+		return false;
+	}
+}

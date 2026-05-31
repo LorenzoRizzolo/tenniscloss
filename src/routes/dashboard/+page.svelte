@@ -229,7 +229,7 @@
 			<!-- New Booking Button -->
 			<button
 				onclick={() => (showBookingForm = !showBookingForm)}
-				class="mb-8 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded hover:shadow-lg hover:shadow-purple-500/50 transition"
+				class="mb-8 px-6 py-3 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#C5A94E]/50 transition"
 			>
 				{it.dashboard.new_booking}
 			</button>
@@ -246,7 +246,7 @@
 								bind:value={bookingForm.bookingDate}
 								onchange={() => fetchBookingsForDate(bookingForm.bookingDate)}
 								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none"
+								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none"
 							/>
 						</div>
 						<br>
@@ -259,7 +259,7 @@
 									getAvailableTimes();
 								}}
 								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none cursor-pointer"
+								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none cursor-pointer"
 							>
 								<option value="">{it.dashboard.select_time}</option>
 								{#each availableStartTimes as time}
@@ -273,7 +273,7 @@
 								bind:value={bookingForm.endTime}
 								onchange={calculateDuration}
 								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none cursor-pointer"
+								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none cursor-pointer"
 							>
 								<option value="">{it.dashboard.select_time}</option>
 								{#each availableEndTimes as time}
@@ -287,7 +287,7 @@
 								type="text"
 								bind:value={bookingForm.notes}
 								placeholder={it.dashboard.notes_placeholder}
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-purple-500 outline-none"
+								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none"
 							/>
 						</div>
 

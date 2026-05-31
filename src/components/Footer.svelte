@@ -29,7 +29,7 @@
 		<div class="border-t border-slate-700 pt-8 text-center text-slate-400">
 			<!-- <p>© 2024 Tennis Borgata Closs. Tutti i diritti riservati.</p> -->
 			<p class="mt-2">
-				Powered by <a href="https://rizzolo.cloud" class="text-purple-400 hover:text-purple-300" target="_blank" rel="noopener noreferrer">Rizzolo.cloud</a>
+				Powered by <a href="https://rizzolo.cloud" class="text-[#C5A94E] hover:text-[#8FBC8F]" target="_blank" rel="noopener noreferrer">Rizzolo.cloud</a>
 			</p>
 		</div>
 	</div>

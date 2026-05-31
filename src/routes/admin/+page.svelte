@@ -207,6 +207,66 @@
 			message = it.admin.delete_user_error;
 		}
 	}
+
+	async function approveUser(userId) {
+		try {
+			const response = await fetch(`/api/admin/users/${userId}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("authToken")}`
+				},
+				body: JSON.stringify({ action: "approve" })
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				message = "Utente approvato con successo";
+				isError = false;
+				await fetchData();
+			} else {
+				isError = true;
+				message = data.error || "Errore approvazione utente";
+			}
+		} catch (error) {
+			console.error("Error approving user:", error);
+			isError = true;
+			message = "Errore approvazione utente";
+		}
+	}
+
+	async function rejectUser(userId) {
+		if (!confirm("Sei sicuro di voler rifiutare questo utente? Verru00e0 rimosso dal sistema.")) {
+			return;
+		}
+
+		try {
+			const response = await fetch(`/api/admin/users/${userId}`, {
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("authToken")}`
+				},
+				body: JSON.stringify({ action: "reject" })
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				message = "Utente rifiutato e rimosso";
+				isError = false;
+				await fetchData();
+			} else {
+				isError = true;
+				message = data.error || "Errore rifiuto utente";
+			}
+		} catch (error) {
+			console.error("Error rejecting user:", error);
+			isError = true;
+			message = "Errore rifiuto utente";
+		}
+	}
 </script>
 
 <svelte:head>
@@ -268,7 +328,7 @@
 			<div class="grid md:grid-cols-4 gap-4 mb-8">
 				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
 					<p class="text-slate-400 text-sm">{it.admin.total_users}</p>
-					<p class="text-4xl font-bold text-purple-400">{stats.totalUsers || 0}</p>
+					<p class="text-4xl font-bold text-[#C5A94E]">{stats.totalUsers || 0}</p>
 				</div>
 				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
 					<p class="text-slate-400 text-sm">{it.admin.total_bookings}</p>
@@ -287,7 +347,7 @@
 			<!-- Add User Button -->
 			<button
 				onclick={() => (showAddUserForm = !showAddUserForm)}
-				class="mb-8 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded hover:shadow-lg hover:shadow-purple-500/50 transition"
+				class="mb-8 px-6 py-3 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#C5A94E]/50 transition"
 			>
 				{it.admin.add_user}
 			</button>
@@ -391,6 +451,7 @@
 								<th class="pb-3">{it.auth.name}</th>
 								<th class="pb-3">{it.admin.role}</th>
 								<th class="pb-3">{it.admin.verified}</th>
+								<th class="pb-3">Approvato</th>
 								<th class="pb-3">{it.admin.actions}</th>
 							</tr>
 						</thead>
@@ -399,16 +460,45 @@
 								<tr class="border-b border-slate-700 hover:bg-slate-700/50">
 									<td class="py-3">{userItem.email}</td>
 									<td class="py-3">{userItem.name} {userItem.surname}</td>
-									<td class="py-3"><span class="px-2 py-1 bg-purple-900/30 text-purple-300 rounded text-sm">{userItem.role}</span></td>
+									<td class="py-3"><span class="px-2 py-1 bg-[#C5A94E]/20 text-[#C5A94E] rounded text-sm">{userItem.role}</span></td>
 									<td class="py-3">{userItem.is_verified ? '✓' : '✗'}</td>
 									<td class="py-3">
-										<button
-											onclick={() => deleteUser(userItem.id)}
-											class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold transition"
-											title={it.admin.delete_user}
-										>
-											{it.admin.delete_user}
-										</button>
+										{#if userItem.role === 'utente'}
+											{#if userItem.is_approved}
+												<span class="px-2 py-1 bg-green-900/30 text-green-300 rounded text-xs">✓ Approvato</span>
+											{:else}
+												<span class="px-2 py-1 bg-yellow-900/30 text-yellow-300 rounded text-xs">⏳ In attesa</span>
+											{/if}
+										{:else}
+											<span class="px-2 py-1 bg-[#C5A94E]/20 text-[#C5A94E] rounded text-xs">N/A</span>
+										{/if}
+									</td>
+									<td class="py-3">
+										<div class="flex gap-2">
+											{#if userItem.role === 'utente' && !userItem.is_approved}
+												<button
+													onclick={() => approveUser(userItem.id)}
+													class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold transition"
+													title="Approva utente"
+												>
+													✓ Approva
+												</button>
+												<button
+													onclick={() => rejectUser(userItem.id)}
+													class="px-2 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs font-bold transition"
+													title="Rifiuta utente"
+												>
+													✗ Rifiuta
+												</button>
+											{/if}
+											<button
+												onclick={() => deleteUser(userItem.id)}
+												class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold transition"
+												title={it.admin.delete_user}
+											>
+												{it.admin.delete_user}
+											</button>
+										</div>
 									</td>
 								</tr>
 							{/each}
@@ -432,6 +522,8 @@
 								<th class="pb-3">Azioni</th>
 							</tr>
 						</thead>
+
+
 						<tbody>
 							{#each bookings as booking}
 								<tr class="border-b border-slate-700 hover:bg-slate-700/50">

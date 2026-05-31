@@ -1,75 +1,74 @@
 import { json } from '@sveltejs/kit';
 import { db } from '$lib/server/db.js';
-import { generateId, hashPassword, validatePassword, generateToken } from '$lib/server/auth.js';
-import { sendManagerBookingNotification } from '$lib/server/email.js';
+import { generateId, hashPassword, validatePassword } from '$lib/server/auth.js';
+import { sendNewRegistrationNotification } from '$lib/server/email.js';
 
 export async function POST({ request }) {
 	try {
 		const { email, otp, password, name, surname } = await request.json();
 
 		if (!email || !otp || !password) {
-			return json({ error: 'Email, OTP, and password are required' }, { status: 400 });
+			return json({ error: 'Email, OTP e password sono obbligatori' }, { status: 400 });
 		}
 
-		// Validate password
 		const passwordValidation = validatePassword(password);
 		if (!passwordValidation.valid) {
 			return json({ error: passwordValidation.errors }, { status: 400 });
 		}
 
-		// Find and verify OTP
 		const now = new Date().toISOString();
 		const otpRecord = db
 			.prepare('SELECT * FROM otp_codes WHERE email = ? AND code = ? AND expires_at > ?')
 			.get(email, otp, now);
 
 		if (!otpRecord) {
-			// Increment attempts
 			const existingOTP = db.prepare('SELECT * FROM otp_codes WHERE email = ? AND expires_at > ?').get(email, now);
 			if (existingOTP) {
 				db.prepare('UPDATE otp_codes SET attempts = attempts + 1 WHERE id = ?').run(existingOTP.id);
 				if (existingOTP.attempts >= existingOTP.max_attempts) {
-					return json({ error: 'Too many failed attempts. Request a new OTP.' }, { status: 400 });
+					return json({ error: 'Troppi tentativi falliti. Richiedi un nuovo OTP.' }, { status: 400 });
 				}
 			}
-			return json({ error: 'Invalid or expired OTP' }, { status: 400 });
+			return json({ error: 'OTP non valido o scaduto' }, { status: 400 });
 		}
 
-		// Check if user already exists
 		const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
 		if (existingUser) {
-			return json({ error: 'Email already registered' }, { status: 400 });
+			return json({ error: 'Email già registrata' }, { status: 400 });
 		}
 
-		// Create user
+		// Crea utente con is_approved=0: deve essere approvato da admin/gestore
 		const userId = generateId();
 		const passwordHash = await hashPassword(password);
 
 		db.prepare(
-			`INSERT INTO users (id, email, name, surname, password_hash, role, is_verified)
-			 VALUES (?, ?, ?, ?, ?, 'utente', 1)`
+			`INSERT INTO users (id, email, name, surname, password_hash, role, is_verified, is_approved)
+			 VALUES (?, ?, ?, ?, ?, 'utente', 1, 0)`
 		).run(userId, email, name, surname, passwordHash);
 
-		// Delete used OTP
 		db.prepare('DELETE FROM otp_codes WHERE id = ?').run(otpRecord.id);
 
-		// Generate token
-		const token = generateToken(userId, email, 'utente');
+		// Notifica gestori e admin della nuova registrazione
+		try {
+			const managers = db.prepare("SELECT email FROM users WHERE role IN ('admin', 'gestore') AND is_verified = 1").all();
+			for (const manager of managers) {
+				await sendNewRegistrationNotification(
+					manager.email,
+					`${name} ${surname}`,
+					email
+				);
+			}
+		} catch (e) {
+			console.error('Errore invio notifica registrazione:', e);
+		}
 
 		return json({
 			success: true,
-			message: 'Registration completed successfully',
-			user: {
-				id: userId,
-				email,
-				name,
-				surname,
-				role: 'utente'
-			},
-			token
+			message: 'Registrazione completata con successo! Il tuo account è in attesa di approvazione da parte di un amministratore. Riceverai una notifica via email quando sarà approvato.',
+			requiresApproval: true
 		});
 	} catch (error) {
 		console.error('OTP verification error:', error);
-		return json({ error: 'Internal server error' }, { status: 500 });
+		return json({ error: 'Errore interno del server' }, { status: 500 });
 	}
 }
