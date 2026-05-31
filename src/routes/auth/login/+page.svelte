@@ -60,14 +60,14 @@ isLoading = false;
 
 <Navbar />
 
-<main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
+<main class="min-h-screen bg-gradient-to-br from-[#e8f5e0] via-[#f0f7ef] to-[#e0f0d8] py-12 px-4">
 <div class="max-w-md mx-auto">
-<div class="bg-slate-800 border border-slate-700 rounded-lg p-8">
-<h1 class="text-3xl font-bold text-white mb-6 text-center">Accedi</h1>
+<div class="bg-white border border-[#c8e6c0] rounded-lg p-8 shadow-lg">
+<h1 class="text-3xl font-bold text-[#2d4a22] mb-6 text-center">Accedi</h1>
 
 {#if message}
 <div
-class="mb-4 p-3 rounded {isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/30 text-green-300'}"
+class="mb-4 p-3 rounded {isError ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-green-100 text-green-700 border border-green-300'}"
 >
 {message}
 </div>
@@ -75,32 +75,32 @@ class="mb-4 p-3 rounded {isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/
 
 <form onsubmit={login} class="space-y-4">
 <div>
-<label for="email" class="block text-white text-sm font-bold mb-2">Email</label>
+<label for="email" class="block text-[#2d4a22] text-sm font-bold mb-2">Email</label>
 <input
 type="email"
 id="email"
 bind:value={email}
 required
-class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition"
+class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none transition"
 placeholder="tua@email.com"
 />
 </div>
 
 <div>
-<label for="password" class="block text-white text-sm font-bold mb-2">Password</label>
+<label for="password" class="block text-[#2d4a22] text-sm font-bold mb-2">Password</label>
 <div class="relative">
 <input
 type={showPassword ? 'text' : 'password'}
 id="password"
 bind:value={password}
 required
-class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition pr-10"
+class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none transition pr-10"
 placeholder="••••••••"
 />
 <button
 type="button"
 onclick={() => (showPassword = !showPassword)}
-class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition"
+class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#4a6d35] hover:text-[#2d4a22] transition"
 title={showPassword ? 'Nascondi' : 'Mostra'}
 >
 {#if showPassword}
@@ -115,15 +115,15 @@ title={showPassword ? 'Nascondi' : 'Mostra'}
 <button
 type="submit"
 disabled={isLoading}
-class="w-full py-2 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#C5A94E]/50 transition disabled:opacity-50"
+class="w-full py-2 bg-gradient-to-r from-[#5a8a3c] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#5a8a3c]/40 transition disabled:opacity-50"
 >
 {isLoading ? 'Accesso in corso...' : 'Accedi'}
 </button>
 </form>
 
-<p class="text-center text-slate-300 mt-6">
+<p class="text-center text-[#4a6d35] mt-6">
 Non hai un account?
-<a href="/auth/register" class="text-[#C5A94E] hover:text-[#8FBC8F]">Registrati qui</a>
+<a href="/auth/register" class="text-[#5a8a3c] hover:text-[#8FBC8F] font-semibold">Registrati qui</a>
 </p>
 </div>
 </div>

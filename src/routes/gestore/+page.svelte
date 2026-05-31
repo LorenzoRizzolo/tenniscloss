@@ -156,12 +156,12 @@
 
 	function getStatusBadge(status) {
 		const badges = {
-			pending: 'bg-yellow-900/30 text-yellow-300',
-			confirmed: 'bg-green-900/30 text-green-300',
-			cancelled: 'bg-red-900/30 text-red-300',
-			completed: 'bg-blue-900/30 text-blue-300'
+			pending: 'bg-yellow-100 text-yellow-700',
+			confirmed: 'bg-green-100 text-green-700',
+			cancelled: 'bg-red-100 text-red-700',
+			completed: 'bg-blue-100 text-blue-700'
 		};
-		return badges[status] || 'bg-slate-900/30 text-slate-300';
+		return badges[status] || 'bg-white/30 text-[#4a6d35]';
 	}
 </script>
 
@@ -171,17 +171,17 @@
 
 <Navbar />
 
-<main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
+<main class="min-h-screen bg-gradient-to-br from-[#e8f5e0] via-[#f0f7ef] to-[#e0f0d8] py-12 px-4">
 	<div class="max-w-6xl mx-auto">
 		{#if user}
 			<div class="mb-8">
-				<h1 class="text-4xl font-bold text-white mb-2">📋 Manager Dashboard</h1>
-				<p class="text-slate-400">Manage and confirm bookings</p>
+				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">📋 Manager Dashboard</h1>
+				<p class="text-[#4a6d35]">Manage and confirm bookings</p>
 			</div>
 
 			{#if message}
 				<div
-					class="mb-6 p-4 rounded {isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/30 text-green-300'}"
+					class="mb-6 p-4 rounded {isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}"
 				>
 					{message}
 				</div>
@@ -189,11 +189,11 @@
 
 			<!-- Pending Users Section -->
 			{#if pendingUsers.length > 0}
-				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-8">
-					<h2 class="text-2xl font-bold text-white mb-6">👥 Utenti in Attesa di Approvazione ({pendingUsers.length})</h2>
+				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8">
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">👥 Utenti in Attesa di Approvazione ({pendingUsers.length})</h2>
 					<div class="overflow-x-auto">
-						<table class="w-full text-left text-slate-300 text-sm">
-							<thead class="border-b border-slate-700">
+						<table class="w-full text-left text-[#4a6d35] text-sm">
+							<thead class="border-b border-[#c8e6c0]">
 								<tr>
 									<th class="pb-3">Nome</th>
 									<th class="pb-3">Email</th>
@@ -203,7 +203,7 @@
 							</thead>
 							<tbody>
 								{#each pendingUsers as pendingUser}
-									<tr class="border-b border-slate-700 hover:bg-slate-700/50">
+									<tr class="border-b border-[#c8e6c0] hover:bg-[#e8f5e0]">
 										<td class="py-3">{pendingUser.name} {pendingUser.surname}</td>
 										<td class="py-3">{pendingUser.email}</td>
 										<td class="py-3">{new Date(pendingUser.created_at).toLocaleDateString('it-IT')}</td>
@@ -217,7 +217,7 @@
 												</button>
 												<button
 													onclick={() => rejectUser(pendingUser.id)}
-													class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold transition"
+													class="px-2 py-1 bg-red-600 hover:bg-red-600 text-white rounded text-xs font-bold transition"
 												>
 													✗ Rifiuta
 												</button>
@@ -231,17 +231,17 @@
 				</div>
 			{/if}
 
-			<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
-				<h2 class="text-2xl font-bold text-white mb-6">All Bookings</h2>
+			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
+				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">All Bookings</h2>
 
 				{#if isLoading}
-					<p class="text-slate-400">Loading...</p>
+					<p class="text-[#4a6d35]">Loading...</p>
 				{:else if bookings.length === 0}
-					<p class="text-slate-400">No bookings</p>
+					<p class="text-[#4a6d35]">No bookings</p>
 				{:else}
 					<div class="overflow-x-auto">
-						<table class="w-full text-left text-slate-300 text-sm">
-							<thead class="border-b border-slate-700">
+						<table class="w-full text-left text-[#4a6d35] text-sm">
+							<thead class="border-b border-[#c8e6c0]">
 								<tr>
 									<th class="pb-3">Date</th>
 									<th class="pb-3">Time</th>
@@ -253,13 +253,13 @@
 							</thead>
 							<tbody>
 								{#each bookings as booking}
-									<tr class="border-b border-slate-700 hover:bg-slate-700/50">
+									<tr class="border-b border-[#c8e6c0] hover:bg-[#e8f5e0]">
 										<td class="py-3">{booking.booking_date}</td>
 										<td class="py-3">{booking.start_time} - {booking.end_time}</td>
 										<td class="py-3">
 											<div class="text-sm">
 												<p class="font-bold">{booking.user_name} {booking.user_surname}</p>
-												<p class="text-slate-400">{booking.user_email}</p>
+												<p class="text-[#4a6d35]">{booking.user_email}</p>
 											</div>
 										</td>
 										<td class="py-3">{booking.duration_minutes} min</td>
@@ -279,7 +279,7 @@
 													</button>
 													<button
 														onclick={() => updateBooking(booking.id, 'cancelled')}
-														class="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
+														class="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-600"
 													>
 														✗ cancella
 													</button>
@@ -294,7 +294,7 @@
 				{/if}
 			</div>
 		{:else}
-			<p class="text-white">Loading...</p>
+			<p class="text-[#2d4a22]">Loading...</p>
 		{/if}
 	</div>
 </main>

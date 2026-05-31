@@ -29,8 +29,8 @@ export async function POST({ request, locals }) {
 		const passwordHash = await hashPassword(password);
 
 		db.prepare(
-			`INSERT INTO users (id, email, name, surname, password_hash, role, is_verified, created_by)
-			 VALUES (?, ?, ?, ?, ?, ?, 1, ?)`
+			`INSERT INTO users (id, email, name, surname, password_hash, role, is_verified, is_approved, created_by)
+			 VALUES (?, ?, ?, ?, ?, ?, 1, 1, ?)`
 		).run(userId, email, name, surname, passwordHash, role, locals.user?.userId || null);
 
 		return json({

@@ -12,6 +12,8 @@ html,
 body {
   height: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f7ef;
+  color: #2d4a22;
 }
 
 /* Animations */
@@ -54,11 +56,11 @@ body {
   0%,
   100% {
     opacity: 1;
-    box-shadow: 0 0 20px rgba(197, 169, 78, 0.5);
+    box-shadow: 0 0 20px rgba(143, 188, 143, 0.5);
   }
   50% {
     opacity: 0.8;
-    box-shadow: 0 0 30px rgba(197, 169, 78, 0.8);
+    box-shadow: 0 0 30px rgba(143, 188, 143, 0.8);
   }
 }
 
@@ -91,16 +93,16 @@ body {
   transform: translateZ(0);
 }
 
-/* Glassmorphism Effect */
+/* Glassmorphism Effect - light */
 .glass {
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(143, 188, 143, 0.25);
 }
 
 /* Gradient Text */
 .gradient-text {
-  background: linear-gradient(135deg, #C5A94E 0%, #8FBC8F 100%);
+  background: linear-gradient(135deg, #5a8a3c 0%, #8FBC8F 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -117,16 +119,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #e8f5e0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #64748b;
+  background: #8FBC8F;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #6da06d;
 }
 
 /* Focus states */
@@ -134,7 +136,7 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  @apply ring-2 ring-[#C5A94E] ring-offset-2 ring-offset-slate-900;
+  @apply ring-2 ring-[#5a8a3c] ring-offset-2 ring-offset-white;
 }
 
 /* Button styles */
@@ -143,14 +145,14 @@ textarea:focus {
 }
 
 .btn-primary {
-  @apply btn bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white hover:shadow-lg hover:shadow-[#C5A94E]/50;
+  @apply btn bg-gradient-to-r from-[#5a8a3c] to-[#8FBC8F] text-white hover:shadow-lg hover:shadow-[#5a8a3c]/40;
 }
 
 .btn-secondary {
-  @apply btn bg-slate-700 text-white hover:bg-slate-600;
+  @apply btn bg-white text-[#2d4a22] border border-[#8FBC8F] hover:bg-[#f0f7ef];
 }
 
 /* Card styles */
 .card {
-  @apply bg-slate-800 border border-slate-700 rounded-lg p-6 shadow-lg;
+  @apply bg-white border border-[#c8e6c0] rounded-lg p-6 shadow-lg;
 }

@@ -71,9 +71,9 @@ export async function PATCH({ request, locals, params }) {
 			return json({ error: 'User not found' }, { status: 404 });
 		}
 
-		if (user.role !== 'utente') {
-			return json({ error: 'Can only approve/reject utente users' }, { status: 400 });
-		}
+		// if (user.role !== 'utente') {
+		// 	return json({ error: 'Can only approve/reject utente users' }, { status: 400 });
+		// }
 
 		const now = new Date().toISOString();
 

@@ -10,14 +10,14 @@
 
 <Navbar />
 
-<main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
+<main class="min-h-screen bg-gradient-to-br from-[#e8f5e0] via-[#f0f7ef] to-[#e0f0d8] py-12 px-4">
 	<div class="max-w-3xl mx-auto">
-		<div class="bg-slate-800 border border-slate-700 rounded-lg p-8">
-			<h1 class="text-4xl font-bold text-white mb-8">🔒 Privacy Policy</h1>
+		<div class="bg-white border border-[#c8e6c0] rounded-lg p-8">
+			<h1 class="text-4xl font-bold text-[#2d4a22] mb-8">🔒 Privacy Policy</h1>
 
-			<div class="space-y-6 text-slate-300">
+			<div class="space-y-6 text-[#4a6d35]">
 				<section>
-					<h2 class="text-2xl font-bold text-white mb-3">1. Introduction</h2>
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-3">1. Introduction</h2>
 					<p>
 						Tennis Borgata Closs ("we", "us", or "our") operates the Tennis Borgata Closs website.
 						This page informs you of our policies regarding the collection, use, and disclosure of
@@ -26,7 +26,7 @@
 				</section>
 
 				<section>
-					<h2 class="text-2xl font-bold text-white mb-3">2. Data Collection</h2>
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-3">2. Data Collection</h2>
 					<p>We collect the following personal data:</p>
 					<ul class="list-disc pl-5 mt-2 space-y-1">
 						<li>Name and surname</li>
@@ -37,7 +37,7 @@
 				</section>
 
 				<section>
-					<h2 class="text-2xl font-bold text-white mb-3">3. Use of Data</h2>
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-3">3. Use of Data</h2>
 					<p>We use the collected data for various purposes:</p>
 					<ul class="list-disc pl-5 mt-2 space-y-1">
 						<li>To provide and maintain our service</li>
@@ -50,7 +50,7 @@
 				</section>
 
 				<section>
-					<h2 class="text-2xl font-bold text-white mb-3">4. Security of Data</h2>
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-3">4. Security of Data</h2>
 					<p>
 						The security of your data is important to us but remember that no method of transmission
 						over the Internet or method of electronic storage is 100% secure. While we strive to use
@@ -60,7 +60,7 @@
 				</section>
 
 				<section>
-					<h2 class="text-2xl font-bold text-white mb-3">5. Contact Us</h2>
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-3">5. Contact Us</h2>
 					<p>
 						If you have any questions about this Privacy Policy, please contact us at:
 						<br />
@@ -68,8 +68,8 @@
 					</p>
 				</section>
 
-				<section class="pt-6 border-t border-slate-700">
-					<p class="text-sm text-slate-400">
+				<section class="pt-6 border-t border-[#c8e6c0]">
+					<p class="text-sm text-[#4a6d35]">
 						Last updated: {new Date().toLocaleDateString()}
 					</p>
 				</section>

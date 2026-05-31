@@ -51,14 +51,14 @@
 
 <Navbar />
 
-<main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20 px-4">
+<main class="min-h-screen bg-gradient-to-br from-[#e8f5e0] via-[#f0f7ef] to-[#e0f0d8] py-20 px-4">
 	<div class="max-w-md mx-auto">
-		<div class="bg-slate-800 border border-slate-700 rounded-lg p-8 shadow-lg">
-			<h1 class="text-3xl font-bold text-white mb-6 text-center">🎾 Registrazione</h1>
+		<div class="bg-white border border-[#c8e6c0] rounded-lg p-8 shadow-lg">
+			<h1 class="text-3xl font-bold text-[#2d4a22] mb-6 text-center">🎾 Registrazione</h1>
 
 			{#if message}
 				<div
-					class="mb-4 p-3 rounded {isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/30 text-green-300'}"
+					class="mb-4 p-3 rounded {isError ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-green-100 text-green-700 border border-green-300'}"
 				>
 					{message}
 				</div>
@@ -66,37 +66,37 @@
 
 			<form onsubmit={requestOTP} class="space-y-4">
 				<div>
-					<label for="name" class="block text-white text-sm font-bold mb-2">Nome</label>
+					<label for="name" class="block text-[#2d4a22] text-sm font-bold mb-2">Nome</label>
 					<input
 						type="text"
 						id="name"
 						bind:value={name}
 						required
-						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition"
+						class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none transition"
 						placeholder="Il tuo nome"
 					/>
 				</div>
 
 				<div>
-					<label for="surname" class="block text-white text-sm font-bold mb-2">Cognome</label>
+					<label for="surname" class="block text-[#2d4a22] text-sm font-bold mb-2">Cognome</label>
 					<input
 						type="text"
 						id="surname"
 						bind:value={surname}
 						required
-						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition"
+						class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none transition"
 						placeholder="Il tuo cognome"
 					/>
 				</div>
 
 				<div>
-					<label for="email" class="block text-white text-sm font-bold mb-2">Email</label>
+					<label for="email" class="block text-[#2d4a22] text-sm font-bold mb-2">Email</label>
 					<input
 						type="email"
 						id="email"
 						bind:value={email}
 						required
-						class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none transition"
+						class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none transition"
 						placeholder="tua@email.com"
 					/>
 				</div>
@@ -104,15 +104,15 @@
 				<button
 					type="submit"
 					disabled={isLoading}
-					class="w-full py-3 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#C5A94E]/50 disabled:opacity-50 transition"
+					class="w-full py-3 bg-gradient-to-r from-[#5a8a3c] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#5a8a3c]/40 disabled:opacity-50 transition"
 				>
 					{isLoading ? "Invio in corso..." : "Invia Codice di Verifica"}
 				</button>
 			</form>
 
-			<p class="text-center text-slate-400 mt-6">
+			<p class="text-center text-[#4a6d35] mt-6">
 				Già registrato?
-				<a href="/auth/login" class="text-[#C5A94E] hover:text-[#8FBC8F] font-bold">Accedi</a>
+				<a href="/auth/login" class="text-[#5a8a3c] hover:text-[#8FBC8F] font-bold">Accedi</a>
 			</p>
 		</div>
 	</div>

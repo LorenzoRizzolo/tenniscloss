@@ -195,12 +195,12 @@
 
 	function getStatusBadge(status) {
 		const badges = {
-			pending: 'bg-yellow-900/30 text-yellow-300',
-			confirmed: 'bg-green-900/30 text-green-300',
-			cancelled: 'bg-red-900/30 text-red-300',
-			completed: 'bg-blue-900/30 text-blue-300'
+			pending: 'bg-yellow-100 text-yellow-700',
+			confirmed: 'bg-green-100 text-green-700',
+			cancelled: 'bg-red-100 text-red-700',
+			completed: 'bg-blue-100 text-blue-700'
 		};
-		return badges[status] || 'bg-slate-900/30 text-slate-300';
+		return badges[status] || 'bg-white/30 text-[#4a6d35]';
 	}
 </script>
 
@@ -210,17 +210,17 @@
 
 <Navbar />
 
-<main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
+<main class="min-h-screen bg-gradient-to-br from-[#e8f5e0] via-[#f0f7ef] to-[#e0f0d8] py-12 px-4">
 	<div class="max-w-6xl mx-auto">
 		{#if user}
 			<div class="mb-8">
-				<h1 class="text-4xl font-bold text-white mb-2">🎾 {it.dashboard.welcome}, {user.name}!</h1>
-				<p class="text-slate-400">{it.dashboard.manage_bookings}</p>
+				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">🎾 {it.dashboard.welcome}, {user.name}!</h1>
+				<p class="text-[#4a6d35]">{it.dashboard.manage_bookings}</p>
 			</div>
 
 			{#if message}
 				<div
-					class="mb-6 p-4 rounded {isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/30 text-green-300'}"
+					class="mb-6 p-4 rounded {isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}"
 				>
 					{message}
 				</div>
@@ -229,29 +229,29 @@
 			<!-- New Booking Button -->
 			<button
 				onclick={() => (showBookingForm = !showBookingForm)}
-				class="mb-8 px-6 py-3 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#C5A94E]/50 transition"
+				class="mb-8 px-6 py-3 bg-gradient-to-r from-[#5a8a3c] to-[#8FBC8F] text-[#2d4a22] font-bold rounded hover:shadow-lg hover:shadow-[#5a8a3c]/40 transition"
 			>
 				{it.dashboard.new_booking}
 			</button>
 
 			<!-- Booking Form -->
 			{#if showBookingForm}
-				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-8">
-					<h2 class="text-2xl font-bold text-white mb-6">{it.dashboard.create_booking}</h2>
+				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8">
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.dashboard.create_booking}</h2>
 					<form onsubmit={createBooking} class="grid md:grid-cols-2 gap-4">
 						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.dashboard.date}</label>
+							<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.dashboard.date}</label>
 							<input
 								type="date"
 								bind:value={bookingForm.bookingDate}
 								onchange={() => fetchBookingsForDate(bookingForm.bookingDate)}
 								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none"
+								class="w-full px-4 py-2 bg-[#f0f7ef] text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
 							/>
 						</div>
 						<br>
 						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.dashboard.start_time}</label>
+							<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.dashboard.start_time}</label>
 							<select
 								bind:value={bookingForm.startTime}
 								onchange={() => {
@@ -259,7 +259,7 @@
 									getAvailableTimes();
 								}}
 								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none cursor-pointer"
+								class="w-full px-4 py-2 bg-[#f0f7ef] text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none cursor-pointer"
 							>
 								<option value="">{it.dashboard.select_time}</option>
 								{#each availableStartTimes as time}
@@ -268,12 +268,12 @@
 							</select>
 						</div>
 						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.dashboard.end_time}</label>
+							<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.dashboard.end_time}</label>
 							<select
 								bind:value={bookingForm.endTime}
 								onchange={calculateDuration}
 								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none cursor-pointer"
+								class="w-full px-4 py-2 bg-[#f0f7ef] text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none cursor-pointer"
 							>
 								<option value="">{it.dashboard.select_time}</option>
 								{#each availableEndTimes as time}
@@ -282,18 +282,18 @@
 							</select>
 						</div>
 						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.dashboard.notes}</label>
+							<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.dashboard.notes}</label>
 							<input
 								type="text"
 								bind:value={bookingForm.notes}
 								placeholder={it.dashboard.notes_placeholder}
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 focus:border-[#C5A94E] outline-none"
+								class="w-full px-4 py-2 bg-[#f0f7ef] text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
 							/>
 						</div>
 
 						<!-- Duration Info -->
 						{#if durationMinutes > 0}
-							<div class="md:col-span-2 p-3 rounded {durationMinutes > MAX_BOOKING_HOURS * 60 ? 'bg-red-900/30 text-red-300 border border-red-600' : 'bg-blue-900/30 text-blue-300 border border-blue-600'}">
+							<div class="md:col-span-2 p-3 rounded {durationMinutes > MAX_BOOKING_HOURS * 60 ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-blue-100 text-blue-700 border border-blue-300'}">
 								<p class="font-bold">
 									{it.dashboard.duration_info}: {Math.floor(durationMinutes / 60)}{it.dashboard.hours_short} {durationMinutes % 60}{it.dashboard.min_short}
 									{#if durationMinutes > MAX_BOOKING_HOURS * 60}
@@ -319,7 +319,7 @@
 							<button
 								type="button"
 								onclick={() => (showBookingForm = false)}
-								class="flex-1 py-2 bg-slate-700 text-white font-bold rounded hover:bg-slate-600 transition"
+								class="flex-1 py-2 bg-[#f0f7ef] text-[#2d4a22] font-bold rounded hover:bg-[#e8f5e0] transition"
 							>
 								{it.dashboard.cancel}
 							</button>
@@ -329,22 +329,22 @@
 			{/if}
 
 			<!-- Bookings List -->
-			<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
-				<h2 class="text-2xl font-bold text-white mb-6">{it.dashboard.my_bookings}</h2>
+			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
+				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.dashboard.my_bookings}</h2>
 				{#if isLoading}
-					<p class="text-slate-400">{it.calendar.loading}</p>
+					<p class="text-[#4a6d35]">{it.calendar.loading}</p>
 				{:else if bookings.length === 0}
-					<p class="text-slate-400">{it.dashboard.no_bookings}</p>
+					<p class="text-[#4a6d35]">{it.dashboard.no_bookings}</p>
 				{:else}
 					<div class="space-y-4">
 						{#each bookings as booking}
-							<div class="bg-slate-700 rounded-lg p-4 flex justify-between items-center">
+							<div class="bg-[#f0f7ef] rounded-lg p-4 flex justify-between items-center">
 								<div>
-									<p class="text-white font-bold">📅 {booking.booking_date}</p>
-									<p class="text-slate-300">⏰ {booking.start_time} - {booking.end_time}</p>
-									<p class="text-slate-400 text-sm mt-1">{it.dashboard.duration}: {booking.duration_minutes} {it.dashboard.minutes}</p>
+									<p class="text-[#2d4a22] font-bold">📅 {booking.booking_date}</p>
+									<p class="text-[#4a6d35]">⏰ {booking.start_time} - {booking.end_time}</p>
+									<p class="text-[#4a6d35] text-sm mt-1">{it.dashboard.duration}: {booking.duration_minutes} {it.dashboard.minutes}</p>
 									{#if booking.notes}
-										<p class="text-slate-400 text-sm">{it.dashboard.notes}: {booking.notes}</p>
+										<p class="text-[#4a6d35] text-sm">{it.dashboard.notes}: {booking.notes}</p>
 									{/if}
 								</div>
 								<div class="text-right">
@@ -358,7 +358,7 @@
 				{/if}
 			</div>
 		{:else}
-			<p class="text-white">{it.calendar.loading}</p>
+			<p class="text-[#2d4a22]">{it.calendar.loading}</p>
 		{/if}
 	</div>
 </main>

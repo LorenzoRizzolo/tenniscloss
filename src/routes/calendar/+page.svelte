@@ -144,27 +144,27 @@
 
 <Navbar />
 
-<main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
+<main class="min-h-screen bg-gradient-to-br from-[#e8f5e0] via-[#f0f7ef] to-[#e0f0d8] py-12 px-4">
 	<div class="max-w-4xl mx-auto">
 		{#if user}
 			<div class="mb-8">
-				<h1 class="text-4xl font-bold text-white mb-2">📅 Calendario Prenotazioni</h1>
-				<p class="text-slate-400">Visualizza le disponibilità dei campi</p>
+				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">📅 Calendario Prenotazioni</h1>
+				<p class="text-[#4a6d35]">Visualizza le disponibilità dei campi</p>
 			</div>
 
 			<!-- Date Navigation -->
-			<div class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-8">
+			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8 shadow-sm">
 				<div class="flex items-center justify-between mb-6 gap-4">
 					<button
 						onclick={previousDay}
-						class="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded transition"
+						class="px-6 py-2 bg-[#f0f7ef] hover:bg-[#e8f5e0] text-[#2d4a22] font-bold rounded transition"
 					>
 						← Giorno Precedente
 					</button>
-					<h2 class="text-2xl font-bold text-white">{formatDate(currentDate)}</h2>
+					<h2 class="text-2xl font-bold text-[#2d4a22]">{formatDate(currentDate)}</h2>
 					<button
 						onclick={nextDay}
-						class="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded transition"
+						class="px-6 py-2 bg-[#f0f7ef] hover:bg-[#e8f5e0] text-[#2d4a22] font-bold rounded transition"
 					>
 						Giorno Successivo →
 					</button>
@@ -172,16 +172,16 @@
 				
 				<!-- Date Picker -->
 				<div class="flex gap-3 items-center justify-center">
-					<label for="datePicker" class="text-slate-300 font-bold">Salta a data:</label>
+					<label for="datePicker" class="text-[#4a6d35] font-bold">Salta a data:</label>
 					<input
 						id="datePicker"
 						type="date"
 						bind:value={selectedDate}
-						class="px-4 py-2 bg-slate-700 text-white rounded border border-slate-600"
+						class="px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0]"
 					/>
 					<button
 						onclick={jumpToDate}
-						class="px-6 py-2 bg-[#C5A94E] hover:bg-[#8FBC8F] text-white font-bold rounded transition"
+						class="px-6 py-2 bg-[#5a8a3c] hover:bg-[#4a7a2c] text-white font-bold rounded transition"
 					>
 						✓ Vai
 					</button>
@@ -190,7 +190,7 @@
 
 			<!-- Time Slots Grid -->
 			{#if isLoading}
-				<div class="text-center text-white">Caricamento...</div>
+				<div class="text-center text-[#2d4a22]">Caricamento...</div>
 			{:else}
 				<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
 					{#each timeSlots as slot}
@@ -216,7 +216,7 @@
 				</div>
 			{/if}
 		{:else}
-			<p class="text-white">Caricamento...</p>
+			<p class="text-[#2d4a22]">Caricamento...</p>
 		{/if}
 	</div>
 </main>

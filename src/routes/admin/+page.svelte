@@ -130,12 +130,69 @@
 		}
 	}
 
+	async function approveUser(userId) {
+		try {
+			const response = await fetch(`/api/admin/users/${userId}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('authToken')}`
+				},
+				body: JSON.stringify({ action: 'approve' })
+			});
+
+			const data = await response.json();
+			if (response.ok) {
+				message = 'Utente approvato con successo';
+				isError = false;
+				await fetchData();
+			} else {
+				isError = true;
+				message = data.error || 'Errore approvazione utente';
+			}
+		} catch (error) {
+			console.error('Error approving user:', error);
+			isError = true;
+			message = 'Errore approvazione utente';
+		}
+	}
+
+	async function rejectUser(userId) {
+		if (!confirm('Sei sicuro di voler rifiutare questo utente? Verrà rimosso dal sistema.')) {
+			return;
+		}
+
+		try {
+			const response = await fetch(`/api/admin/users/${userId}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('authToken')}`
+				},
+				body: JSON.stringify({ action: 'reject' })
+			});
+
+			const data = await response.json();
+			if (response.ok) {
+				message = 'Utente rifiutato e rimosso';
+				isError = false;
+				await fetchData();
+			} else {
+				isError = true;
+				message = data.error || 'Errore rifiuto utente';
+			}
+		} catch (error) {
+			console.error('Error rejecting user:', error);
+			isError = true;
+			message = 'Errore rifiuto utente';
+		}
+	}
+
 	async function addUser(e) {
 		e.preventDefault();
 		isError = false;
 		message = '';
 
-		// Validate form
 		if (!newUserForm.email || !newUserForm.name || !newUserForm.surname) {
 			isError = true;
 			message = it.admin.required_fields;
@@ -197,241 +254,150 @@
 				isError = false;
 				await fetchData();
 			} else {
-				isError = true;
 				const data = await response.json();
-				message = data.error || it.admin.delete_user_error;
+				isError = true;
+				message = data.error || it.admin.user_delete_error;
 			}
 		} catch (error) {
 			console.error('Error deleting user:', error);
 			isError = true;
-			message = it.admin.delete_user_error;
-		}
-	}
-
-	async function approveUser(userId) {
-		try {
-			const response = await fetch(`/api/admin/users/${userId}`, {
-				method: "PATCH",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("authToken")}`
-				},
-				body: JSON.stringify({ action: "approve" })
-			});
-
-			const data = await response.json();
-
-			if (response.ok) {
-				message = "Utente approvato con successo";
-				isError = false;
-				await fetchData();
-			} else {
-				isError = true;
-				message = data.error || "Errore approvazione utente";
-			}
-		} catch (error) {
-			console.error("Error approving user:", error);
-			isError = true;
-			message = "Errore approvazione utente";
-		}
-	}
-
-	async function rejectUser(userId) {
-		if (!confirm("Sei sicuro di voler rifiutare questo utente? Verru00e0 rimosso dal sistema.")) {
-			return;
-		}
-
-		try {
-			const response = await fetch(`/api/admin/users/${userId}`, {
-				method: "PATCH",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("authToken")}`
-				},
-				body: JSON.stringify({ action: "reject" })
-			});
-
-			const data = await response.json();
-
-			if (response.ok) {
-				message = "Utente rifiutato e rimosso";
-				isError = false;
-				await fetchData();
-			} else {
-				isError = true;
-				message = data.error || "Errore rifiuto utente";
-			}
-		} catch (error) {
-			console.error("Error rejecting user:", error);
-			isError = true;
-			message = "Errore rifiuto utente";
+			message = it.admin.user_delete_error;
 		}
 	}
 </script>
 
 <svelte:head>
-	<title>{it.admin.admin_dashboard} - Tennis Borgata Closs</title>
+	<title>Admin - Tennis Borgata Closs</title>
 </svelte:head>
 
 <Navbar />
 
-<main class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
+<main class="min-h-screen bg-gradient-to-br from-[#e8f5e0] via-[#f0f7ef] to-[#e0f0d8] py-12 px-4">
 	<div class="max-w-6xl mx-auto">
 		{#if user}
 			<div class="mb-8">
-				<h1 class="text-4xl font-bold text-white mb-2">👑 {it.admin.admin_dashboard}</h1>
-				<p class="text-slate-400">{it.admin.admin_dashboard}</p>
+				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">🔑 Admin Dashboard</h1>
+				<p class="text-[#4a6d35]">{it.admin.management}</p>
 			</div>
 
 			{#if message}
 				<div
-					class="mb-6 p-4 rounded {isError ? 'bg-red-900/30 text-red-300' : 'bg-green-900/30 text-green-300'}"
+					class="mb-6 p-4 rounded {isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}"
 				>
-					{#if !isError && createdPassword}
-						<div class="flex items-center justify-between gap-4">
-							<span>{message.split(' | ')[0]}</span>
-							<div class="relative inline-flex items-center bg-slate-700/50 px-3 py-1 rounded">
-								<span class="text-sm mr-2">
-									{showTempPassword ? createdPassword : '••••••••'}
-								</span>
-								<button
-									type="button"
-									onclick={() => (showTempPassword = !showTempPassword)}
-									class="text-green-300 hover:text-green-200 transition"
-									title={showTempPassword ? 'Nascondi' : 'Mostra'}
-								>
-									{#if showTempPassword}
-										👁️
-									{:else}
-										👁️‍🗨️
-									{/if}
-								</button>
-								<button
-									type="button"
-									onclick={() => {
-										navigator.clipboard.writeText(createdPassword);
-									}}
-									class="ml-2 text-green-300 hover:text-green-200 transition"
-									title="Copia negli appunti"
-								>
-									📋
-								</button>
-							</div>
-						</div>
-					{:else}
-						{message}
-					{/if}
+					{message}
 				</div>
 			{/if}
 
-			<!-- Stats Grid -->
+			<!-- Stats Cards -->
 			<div class="grid md:grid-cols-4 gap-4 mb-8">
-				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
-					<p class="text-slate-400 text-sm">{it.admin.total_users}</p>
-					<p class="text-4xl font-bold text-[#C5A94E]">{stats.totalUsers || 0}</p>
+				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
+					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">{it.admin.users}</h3>
+					<p class="text-3xl font-bold text-[#2d4a22]">{stats.totalUsers || 0}</p>
 				</div>
-				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
-					<p class="text-slate-400 text-sm">{it.admin.total_bookings}</p>
-					<p class="text-4xl font-bold text-blue-400">{stats.totalBookings || 0}</p>
+				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
+					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">{it.admin.bookings}</h3>
+					<p class="text-3xl font-bold text-[#2d4a22]">{stats.totalBookings || 0}</p>
 				</div>
-				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
-					<p class="text-slate-400 text-sm">{it.admin.pending_bookings}</p>
-					<p class="text-4xl font-bold text-yellow-400">{stats.pendingBookings || 0}</p>
+				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
+					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">{it.admin.pending}</h3>
+					<p class="text-3xl font-bold text-yellow-600">{stats.pendingBookings || 0}</p>
 				</div>
-				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
-					<p class="text-slate-400 text-sm">{it.admin.confirmed_bookings}</p>
-					<p class="text-4xl font-bold text-green-400">{stats.confirmedBookings || 0}</p>
+				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
+					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">{it.admin.confirmed}</h3>
+					<p class="text-3xl font-bold text-green-600">{stats.confirmedBookings || 0}</p>
 				</div>
 			</div>
 
 			<!-- Add User Button -->
 			<button
 				onclick={() => (showAddUserForm = !showAddUserForm)}
-				class="mb-8 px-6 py-3 bg-gradient-to-r from-[#C5A94E] to-[#8FBC8F] text-white font-bold rounded hover:shadow-lg hover:shadow-[#C5A94E]/50 transition"
+				class="mb-6 px-4 py-2 bg-[#5a8a3c] text-white font-bold rounded hover:bg-[#4a7a2c] transition"
 			>
-				{it.admin.add_user}
+				+ {it.admin.add_user}
 			</button>
 
 			<!-- Add User Form -->
 			{#if showAddUserForm}
-				<div class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-8">
-					<h2 class="text-2xl font-bold text-white mb-6">{it.admin.add_user}</h2>
-					<form onsubmit={addUser} class="grid md:grid-cols-2 gap-4">
-						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.auth.email}</label>
-							<input
-								type="email"
-								bind:value={newUserForm.email}
-								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600"
-								placeholder="user@example.com"
-							/>
-						</div>
-						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.admin.role}</label>
-							<select
-								bind:value={newUserForm.role}
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600"
-							>
-								<option value="utente">{it.admin.user_role}</option>
-								<option value="gestore">{it.admin.manager_role}</option>
-								<option value="admin">{it.admin.admin_role}</option>
-							</select>
-						</div>
-						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.auth.name}</label>
-							<input
-								type="text"
-								bind:value={newUserForm.name}
-								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600"
-								placeholder="John"
-							/>
-						</div>
-						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.auth.surname}</label>
-							<input
-								type="text"
-								bind:value={newUserForm.surname}
-								required
-								class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600"
-								placeholder="Doe"
-							/>
-						</div>
-						<div>
-							<label class="block text-white text-sm font-bold mb-2">{it.auth.password}</label>
-							<div class="relative">
+				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8">
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.admin.create_user}</h2>
+					<form onsubmit={addUser} class="space-y-4">
+						<div class="grid md:grid-cols-2 gap-4">
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.name}</label>
 								<input
-									type={showPassword ? 'text' : 'password'}
-									bind:value={newUserForm.password}
-									class="w-full px-4 py-2 bg-slate-700 text-white rounded border border-slate-600 pr-10"
-									placeholder="••••••••"
+									type="text"
+									bind:value={newUserForm.name}
+									required
+									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
 								/>
-								<button
-									type="button"
-									onclick={() => (showPassword = !showPassword)}
-									class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white transition"
-									title={showPassword ? 'Nascondi' : 'Mostra'}
+							</div>
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.surname}</label>
+								<input
+									type="text"
+									bind:value={newUserForm.surname}
+									required
+									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
+								/>
+							</div>
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.email}</label>
+								<input
+									type="email"
+									bind:value={newUserForm.email}
+									required
+									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
+								/>
+							</div>
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.admin.role}</label>
+								<select
+									bind:value={newUserForm.role}
+									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
 								>
-									{#if showPassword}
-										👁️
-									{:else}
-										👁️‍🗨️
-									{/if}
-								</button>
+									<option value="utente">Utente</option>
+									<option value="gestore">Gestore</option>
+									<option value="admin">Admin</option>
+								</select>
+							</div>
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.admin.password} (temporanea)</label>
+								<div class="relative">
+									<input
+										type={showPassword ? 'text' : 'password'}
+										bind:value={newUserForm.password}
+										required
+										class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none pr-10"
+									/>
+									<button
+										type="button"
+										onclick={() => (showPassword = !showPassword)}
+										class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#4a6d35] hover:text-[#2d4a22] transition"
+									>
+										{#if showPassword}👁️{:else}👁️‍🗨️{/if}
+									</button>
+								</div>
 							</div>
 						</div>
-						<div class="md:col-span-2 flex gap-4">
+
+						{#if createdPassword}
+							<div class="bg-yellow-100 border border-yellow-300 text-yellow-800 p-4 rounded">
+								<p class="font-bold">Password temporanea: <span class="text-lg">{createdPassword}</span></p>
+								<p class="text-sm mt-1">Comunicala all'utente: dovrà cambiarla al primo accesso</p>
+							</div>
+						{/if}
+
+						<div class="flex gap-4">
 							<button
 								type="submit"
 								class="flex-1 py-2 bg-green-600 text-white font-bold rounded hover:bg-green-700"
 							>
-								{it.admin.add_user}
+								{it.admin.create_user}
 							</button>
 							<button
 								type="button"
 								onclick={() => (showAddUserForm = false)}
-								class="flex-1 py-2 bg-slate-700 text-white font-bold rounded hover:bg-slate-600"
+								class="flex-1 py-2 bg-[#f0f7ef] text-[#2d4a22] font-bold rounded hover:bg-[#e8f5e0] transition"
 							>
 								{it.dashboard.cancel}
 							</button>
@@ -441,11 +407,11 @@
 			{/if}
 
 			<!-- Users Table -->
-			<div class="bg-slate-800 border border-slate-700 rounded-lg p-6 mb-8">
-				<h2 class="text-2xl font-bold text-white mb-6">{it.admin.users} ({users.length})</h2>
+			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8">
+				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.admin.users} ({users.length})</h2>
 				<div class="overflow-x-auto">
-					<table class="w-full text-left text-slate-300">
-						<thead class="border-b border-slate-700">
+					<table class="w-full text-left text-[#4a6d35]">
+						<thead class="border-b border-[#c8e6c0]">
 							<tr>
 								<th class="pb-3">{it.auth.email}</th>
 								<th class="pb-3">{it.auth.name}</th>
@@ -457,25 +423,21 @@
 						</thead>
 						<tbody>
 							{#each users as userItem}
-								<tr class="border-b border-slate-700 hover:bg-slate-700/50">
+								<tr class="border-b border-[#c8e6c0] hover:bg-[#e8f5e0]">
 									<td class="py-3">{userItem.email}</td>
 									<td class="py-3">{userItem.name} {userItem.surname}</td>
-									<td class="py-3"><span class="px-2 py-1 bg-[#C5A94E]/20 text-[#C5A94E] rounded text-sm">{userItem.role}</span></td>
+									<td class="py-3"><span class="px-2 py-1 bg-[#5a8a3c]/10 text-[#5a8a3c] rounded text-sm">{userItem.role}</span></td>
 									<td class="py-3">{userItem.is_verified ? '✓' : '✗'}</td>
 									<td class="py-3">
-										{#if userItem.role === 'utente'}
-											{#if userItem.is_approved}
-												<span class="px-2 py-1 bg-green-900/30 text-green-300 rounded text-xs">✓ Approvato</span>
-											{:else}
-												<span class="px-2 py-1 bg-yellow-900/30 text-yellow-300 rounded text-xs">⏳ In attesa</span>
-											{/if}
+										{#if userItem.is_approved}
+											<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">✓ Approvato</span>
 										{:else}
-											<span class="px-2 py-1 bg-[#C5A94E]/20 text-[#C5A94E] rounded text-xs">N/A</span>
+											<span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">⏳ In attesa</span>
 										{/if}
 									</td>
 									<td class="py-3">
 										<div class="flex gap-2">
-											{#if userItem.role === 'utente' && !userItem.is_approved}
+											{#if !userItem.is_approved}
 												<button
 													onclick={() => approveUser(userItem.id)}
 													class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold transition"
@@ -493,7 +455,7 @@
 											{/if}
 											<button
 												onclick={() => deleteUser(userItem.id)}
-												class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold transition"
+												class="px-2 py-1 bg-red-600 hover:bg-red-600 text-white rounded text-xs font-bold transition"
 												title={it.admin.delete_user}
 											>
 												{it.admin.delete_user}
@@ -508,12 +470,12 @@
 			</div>
 
 			<!-- Bookings Table -->
-			<div class="bg-slate-800 border border-slate-700 rounded-lg p-6">
-				<h2 class="text-2xl font-bold text-white mb-6">⚙️ {it.admin.bookings} ({bookings.length})</h2>
-				<p class="text-slate-400 text-sm mb-4">Gestisci le prenotazioni: conferma o cancella</p>
+			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
+				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">⚙️ {it.admin.bookings} ({bookings.length})</h2>
+				<p class="text-[#4a6d35] text-sm mb-4">Gestisci le prenotazioni: conferma o cancella</p>
 				<div class="overflow-x-auto">
-					<table class="w-full text-left text-slate-300 text-sm">
-						<thead class="border-b border-slate-700">
+					<table class="w-full text-left text-[#4a6d35] text-sm">
+						<thead class="border-b border-[#c8e6c0]">
 							<tr>
 								<th class="pb-3">{it.dashboard.date}</th>
 								<th class="pb-3">{it.dashboard.start_time}</th>
@@ -522,21 +484,19 @@
 								<th class="pb-3">Azioni</th>
 							</tr>
 						</thead>
-
-
 						<tbody>
 							{#each bookings as booking}
-								<tr class="border-b border-slate-700 hover:bg-slate-700/50">
+								<tr class="border-b border-[#c8e6c0] hover:bg-[#e8f5e0]">
 									<td class="py-3">{booking.booking_date}</td>
 									<td class="py-3">{booking.start_time} - {booking.end_time}</td>
 									<td class="py-3">{booking.name} {booking.surname}</td>
 									<td class="py-3">
 										<span
 											class="px-2 py-1 rounded text-xs {booking.status === 'confirmed'
-												? 'bg-green-900/30 text-green-300'
+												? 'bg-green-100 text-green-700'
 												: booking.status === 'pending'
-													? 'bg-yellow-900/30 text-yellow-300'
-													: 'bg-red-900/30 text-red-300'}"
+													? 'bg-yellow-100 text-yellow-700'
+													: 'bg-red-100 text-red-700'}"
 										>
 											{booking.status === 'confirmed'
 												? '✓ Confermato'
@@ -557,7 +517,7 @@
 										{#if booking.status !== 'cancelled'}
 											<button
 												onclick={() => cancelBooking(booking.id)}
-												class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold transition"
+												class="px-3 py-1 bg-red-600 hover:bg-red-600 text-white rounded text-xs font-bold transition"
 											>
 												✗ Cancella
 											</button>
@@ -568,12 +528,12 @@
 						</tbody>
 					</table>
 					{#if bookings.length === 0}
-						<p class="text-slate-400 text-center py-8">Nessuna prenotazione</p>
+						<p class="text-[#4a6d35] text-center py-8">Nessuna prenotazione</p>
 					{/if}
 				</div>
 			</div>
 		{:else}
-			<p class="text-white">Caricamento...</p>
+			<p class="text-[#2d4a22]">Caricamento...</p>
 		{/if}
 	</div>
 </main>
