@@ -23,6 +23,10 @@
 	let message = $state('');
 	let isError = $state(false);
 	let createdPassword = $state('');
+	let showEditUserForm = $state(false);
+	let editUserData = $state({ id: '', email: '', name: '', surname: '', role: 'utente' });
+	let editMessage = $state('');
+	let editIsError = $state(false);
 
 	onMount(async () => {
 		const token = localStorage.getItem('authToken');
@@ -261,7 +265,56 @@
 		} catch (error) {
 			console.error('Error deleting user:', error);
 			isError = true;
-			message = it.admin.user_delete_error;
+		}
+	}
+
+	async function editUser(userItem) {
+		editMessage = '';
+		editIsError = false;
+		editUserData = { id: userItem.id, email: userItem.email, name: userItem.name, surname: userItem.surname, role: userItem.role };
+		showEditUserForm = true;
+	}
+
+	async function saveUserEdit(e) {
+		e.preventDefault();
+		editIsError = false;
+		editMessage = '';
+
+		if (!editUserData.email || !editUserData.name || !editUserData.surname) {
+			editIsError = true;
+			editMessage = it.admin.required_fields;
+			return;
+		}
+
+		try {
+			const response = await fetch(`/api/admin/users/${editUserData.id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('authToken')}`
+				},
+				body: JSON.stringify({
+					email: editUserData.email,
+					name: editUserData.name,
+					surname: editUserData.surname,
+					role: editUserData.role
+				})
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				editMessage = 'Utente modificato con successo!';
+				showEditUserForm = false;
+				await fetchData();
+			} else {
+				editIsError = true;
+				editMessage = data.error || 'Errore nella modifica dell\'utente';
+			}
+		} catch (error) {
+			console.error('Error editing user:', error);
+			editIsError = true;
+			editMessage = 'Errore nella modifica dell\'utente';
 		}
 	}
 </script>
@@ -313,7 +366,7 @@
 				onclick={() => (showAddUserForm = !showAddUserForm)}
 				class="mb-6 px-4 py-2 bg-[#5a8a3c] text-white font-bold rounded hover:bg-[#4a7a2c] transition"
 			>
-				+ {it.admin.add_user}
+				{it.admin.add_user}
 			</button>
 
 			<!-- Add User Form -->
@@ -406,6 +459,75 @@
 				</div>
 			{/if}
 
+			<!-- Edit User Modal -->
+			{#if showEditUserForm}
+				<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+					<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 w-full max-w-md mx-4">
+						<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">✏️ Modifica Utente</h2>
+						{#if editMessage}
+							<div class="mb-4 p-3 rounded {editIsError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}">
+								{editMessage}
+							</div>
+						{/if}
+						<form onsubmit={saveUserEdit} class="space-y-4">
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.name}</label>
+								<input
+									type="text"
+									bind:value={editUserData.name}
+									required
+									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
+								/>
+							</div>
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.surname}</label>
+								<input
+									type="text"
+									bind:value={editUserData.surname}
+									required
+									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
+								/>
+							</div>
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.email}</label>
+								<input
+									type="email"
+									bind:value={editUserData.email}
+									required
+									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
+								/>
+							</div>
+							<div>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.admin.role}</label>
+								<select
+									bind:value={editUserData.role}
+									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
+								>
+									<option value="utente">{it.admin.user_role}</option>
+									<option value="gestore">{it.admin.manager_role}</option>
+									<option value="admin">{it.admin.admin_role}</option>
+								</select>
+							</div>
+							<div class="flex gap-4">
+								<button
+									type="submit"
+									class="flex-1 py-2 bg-green-600 text-white font-bold rounded hover:bg-green-700"
+								>
+									💾 Salva Modifiche
+								</button>
+								<button
+									type="button"
+									onclick={() => (showEditUserForm = false)}
+									class="flex-1 py-2 bg-[#f0f7ef] text-[#2d4a22] font-bold rounded hover:bg-[#e8f5e0] transition"
+								>
+									{it.dashboard.cancel}
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			{/if}
+
 			<!-- Users Table -->
 			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8">
 				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.admin.users} ({users.length})</h2>
@@ -459,6 +581,13 @@
 												title={it.admin.delete_user}
 											>
 												{it.admin.delete_user}
+											</button>
+											<button
+												onclick={() => editUser(userItem)}
+												class="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-bold transition"
+												title="Modifica utente"
+											>
+												✏️ Modifica
 											</button>
 										</div>
 									</td>

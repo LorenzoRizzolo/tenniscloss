@@ -71,10 +71,6 @@ export async function PATCH({ request, locals, params }) {
 			return json({ error: 'User not found' }, { status: 404 });
 		}
 
-		// if (user.role !== 'utente') {
-		// 	return json({ error: 'Can only approve/reject utente users' }, { status: 400 });
-		// }
-
 		const now = new Date().toISOString();
 
 		if (action === 'approve') {
@@ -100,6 +96,57 @@ export async function PATCH({ request, locals, params }) {
 		}
 	} catch (error) {
 		console.error('User approval error:', error);
+		return json({ error: 'Internal server error' }, { status: 500 });
+	}
+}
+
+export async function PUT({ request, locals, params }) {
+	try {
+		if (!locals.user || locals.user.role !== 'admin') {
+			return json({ error: 'Unauthorized' }, { status: 403 });
+		}
+
+		const { id } = params;
+		const { email, name, surname, role } = await request.json();
+
+		if (!id || !email || !name || !surname || !role) {
+			return json({ error: 'All fields are required' }, { status: 400 });
+		}
+
+		if (!['utente', 'gestore', 'admin'].includes(role)) {
+			return json({ error: 'Invalid role' }, { status: 400 });
+		}
+
+		const existing = db.prepare('SELECT id, role, email FROM users WHERE id = ?').get(id);
+		if (!existing) {
+			return json({ error: 'User not found' }, { status: 404 });
+		}
+
+		// Check email uniqueness if changed
+		if (email !== existing.email) {
+			const dup = db.prepare('SELECT id FROM users WHERE email = ? AND id != ?').get(email, id);
+			if (dup) {
+				return json({ error: 'Email already exists' }, { status: 409 });
+			}
+		}
+
+		// Prevent demoting the last admin
+		if (existing.role === 'admin' && role !== 'admin') {
+			const adminCount = db.prepare("SELECT COUNT(*) AS count FROM users WHERE role = 'admin'").get();
+			if (adminCount.count <= 1) {
+				return json({ error: 'Cannot demote the last admin account' }, { status: 400 });
+			}
+		}
+
+		const now = new Date().toISOString();
+
+		db.prepare(
+			`UPDATE users SET email = ?, name = ?, surname = ?, role = ?, updated_at = ? WHERE id = ?`
+		).run(email, name, surname, role, now, id);
+
+		return json({ success: true, message: 'User updated successfully' });
+	} catch (error) {
+		console.error('Edit user error:', error);
 		return json({ error: 'Internal server error' }, { status: 500 });
 	}
 }

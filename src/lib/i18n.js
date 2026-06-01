@@ -88,6 +88,10 @@ export const it = {
 		pending: 'In Attesa',
 		confirmed: 'Confermato',
 		cancelled: 'Cancellato',
+		cancel_booking_btn: 'Cancella',
+		cancel_booking_confirm: 'Sei sicuro di voler cancellare questa prenotazione?',
+		booking_cancelled_msg: 'Prenotazione cancellata ✓',
+		cancel_booking_error: "Errore nella cancellazione della prenotazione",
 		completed: 'Completato',
 		actions: 'Azioni',
 		duration: 'Durata',
@@ -128,7 +132,12 @@ export const it = {
 		delete_user_error: 'Errore nell\'eliminazione dell\'utente',
 		confirm_delete_user: 'Sei sicuro di voler eliminare questo utente? Questa azione è irreversibile!',
 		verified: 'Verificato',
-		actions: 'Azioni'
+		actions: 'Azioni',
+		edit_user: '✏️ Modifica',
+		edit_user_title: 'Modifica Utente',
+		user_updated: 'Utente modificato con successo!',
+		edit_user_error: "Errore nella modifica dell'utente",
+		save_changes: '💾 Salva Modifiche'
 	},
 
 	// Manager

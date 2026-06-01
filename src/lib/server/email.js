@@ -43,7 +43,7 @@ export async function sendOTPEmail(email, otp, name) {
 						<p style="color: #999; font-size: 12px;">Se non ti sei registrato su questo account, ignora questa email.</p>
 					</div>
 					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
-						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
+						<p>Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
 					</div>
 				</div>
 			`
@@ -82,7 +82,7 @@ export async function sendBookingConfirmationEmail(email, name, bookingDate, sta
 						<p style="color: #666;">Ti preghiamo di arrivare 10 minuti prima dell'orario della tua prenotazione.</p>
 					</div>
 					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
-						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
+						<p>Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
 					</div>
 				</div>
 			`
@@ -124,7 +124,7 @@ export async function sendManagerBookingNotification(managerEmail, userName, boo
 						<p style="color: #666;">Accedi alla dashboard per gestire questa prenotazione.</p>
 					</div>
 					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
-						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
+						<p>Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
 					</div>
 				</div>
 			`
@@ -162,7 +162,7 @@ export async function sendApprovalNotificationEmail(email, name) {
 						<p style="color: #666;">Benvenuto nella community!</p>
 					</div>
 					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
-						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
+						<p>Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
 					</div>
 				</div>
 			`
@@ -200,7 +200,7 @@ export async function sendNewRegistrationNotification(managerEmail, userName, us
 						<p style="color: #666;">Accedi al pannello di gestione per approvare o rifiutare la richiesta.</p>
 					</div>
 					<div style="background: #333; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
-						<p>© 2024 Tennis Borgata Closs - Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
+						<p>Powered by <a href="https://rizzolo.cloud" style="color: #667eea; text-decoration: none;">Rizzolo.cloud</a></p>
 					</div>
 				</div>
 			`

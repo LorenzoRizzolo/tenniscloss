@@ -193,6 +193,37 @@
 		}
 	}
 
+	
+	async function cancelBooking(bookingId) {
+		if (!confirm('Sei sicuro di voler cancellare questa prenotazione?')) {
+			return;
+		}
+
+		try {
+			const response = await fetch(`/api/bookings/${bookingId}`, {
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('authToken')}`
+				}
+			});
+
+			const data = await response.json();
+
+			if (response.ok) {
+				message = 'Prenotazione cancellata ✓';
+				isError = false;
+				await fetchBookings();
+			} else {
+				isError = true;
+				message = data.error || 'Errore nella cancellazione della prenotazione';
+			}
+		} catch (error) {
+			console.error('Error cancelling booking:', error);
+			isError = true;
+			message = 'Errore nella cancellazione della prenotazione';
+		}
+	}
+
 	function getStatusBadge(status) {
 		const badges = {
 			pending: 'bg-yellow-100 text-yellow-700',
@@ -347,7 +378,15 @@
 										<p class="text-[#4a6d35] text-sm">{it.dashboard.notes}: {booking.notes}</p>
 									{/if}
 								</div>
-								<div class="text-right">
+								<div class="text-right flex items-center gap-2">
+									{#if booking.status !== 'cancelled'}
+										<button
+											onclick={() => cancelBooking(booking.id)}
+											class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-bold transition"
+										>
+											Cancella
+										</button>
+									{/if}
 									<div class="px-3 py-1 rounded text-sm font-bold {getStatusBadge(booking.status)}">
 										{it.dashboard[booking.status] || booking.status.toUpperCase()}
 									</div>
