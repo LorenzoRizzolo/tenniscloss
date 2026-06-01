@@ -55,7 +55,7 @@
 				🎾 TENNIS BORGATA CLOSS
 			</h1>
 			<p class="text-xl md:text-2xl text-[#4a6d35] mb-8 font-light">
-				L'esperienza di prenotazione del campo da tennis
+				L'App di prenotazione del campo da tennis
 			</p>
 			<div class="flex gap-4 justify-center flex-wrap">
 				<a

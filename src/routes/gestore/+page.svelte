@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation';
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
-	import { translateStatus } from '$lib';
+	import { translateStatus, formatDateDisplay, formatTimestampDisplay } from '$lib';
 
 	let user = $state(null);
 	let bookings = $state([]);
@@ -142,11 +142,11 @@
 			const data = await response.json();
 
 			if (response.ok) {
-				message = `Booking ${newStatus}!`;
+				message = `Prenotazione ${newStatus === 'confirmed' ? 'confermata' : 'cancellata'}!`;
 				fetchBookings();
 			} else {
 				isError = true;
-				message = data.error || 'Failed to update booking';
+				message = data.error || 'Impossibile aggiornare la prenotazione';
 			}
 		} catch (error) {
 			isError = true;
@@ -166,7 +166,7 @@
 </script>
 
 <svelte:head>
-	<title>Manager Dashboard - Tennis Borgata Closs</title>
+	<title>Dashboard Gestore - Tennis Borgata Closs</title>
 </svelte:head>
 
 <Navbar />
@@ -175,8 +175,8 @@
 	<div class="max-w-6xl mx-auto">
 		{#if user}
 			<div class="mb-8">
-				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">📋 Manager Dashboard</h1>
-				<p class="text-[#4a6d35]">Manage and confirm bookings</p>
+				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">📋 Dashboard Gestore</h1>
+				<p class="text-[#4a6d35]">Gestisci e conferma le prenotazioni</p>
 			</div>
 
 			{#if message}
@@ -206,7 +206,7 @@
 									<tr class="border-b border-[#c8e6c0] hover:bg-[#e8f5e0]">
 										<td class="py-3">{pendingUser.name} {pendingUser.surname}</td>
 										<td class="py-3">{pendingUser.email}</td>
-										<td class="py-3">{new Date(pendingUser.created_at).toLocaleDateString('it-IT')}</td>
+										<td class="py-3">{formatTimestampDisplay(pendingUser.created_at)}</td>
 										<td class="py-3">
 											<div class="flex gap-2">
 												<button
@@ -232,29 +232,29 @@
 			{/if}
 
 			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
-				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">All Bookings</h2>
+				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">Tutte le Prenotazioni</h2>
 
 				{#if isLoading}
-					<p class="text-[#4a6d35]">Loading...</p>
+					<p class="text-[#4a6d35]">Caricamento...</p>
 				{:else if bookings.length === 0}
-					<p class="text-[#4a6d35]">No bookings</p>
+					<p class="text-[#4a6d35]">Nessuna prenotazione</p>
 				{:else}
 					<div class="overflow-x-auto">
 						<table class="w-full text-left text-[#4a6d35] text-sm">
 							<thead class="border-b border-[#c8e6c0]">
 								<tr>
-									<th class="pb-3">Date</th>
-									<th class="pb-3">Time</th>
-									<th class="pb-3">User</th>
-									<th class="pb-3">Duration</th>
-									<th class="pb-3">Status</th>
-									<th class="pb-3">Actions</th>
+									<th class="pb-3">Data</th>
+									<th class="pb-3">Orario</th>
+									<th class="pb-3">Utente</th>
+									<th class="pb-3">Durata</th>
+									<th class="pb-3">Stato</th>
+									<th class="pb-3">Azioni</th>
 								</tr>
 							</thead>
 							<tbody>
 								{#each bookings as booking}
 									<tr class="border-b border-[#c8e6c0] hover:bg-[#e8f5e0]">
-										<td class="py-3">{booking.booking_date}</td>
+										<td class="py-3">{formatDateDisplay(booking.booking_date)}</td>
 										<td class="py-3">{booking.start_time} - {booking.end_time}</td>
 										<td class="py-3">
 											<div class="text-sm">
@@ -275,13 +275,13 @@
 														onclick={() => updateBooking(booking.id, 'confirmed')}
 														class="px-2 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700"
 													>
-														✓ conferma
+														✓ Conferma
 													</button>
 													<button
 														onclick={() => updateBooking(booking.id, 'cancelled')}
 														class="px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-600"
 													>
-														✗ cancella
+														✗ Annulla
 													</button>
 												{/if}
 											</div>
@@ -294,7 +294,7 @@
 				{/if}
 			</div>
 		{:else}
-			<p class="text-[#2d4a22]">Loading...</p>
+			<p class="text-[#2d4a22]">Caricamento...</p>
 		{/if}
 	</div>
 </main>

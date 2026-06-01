@@ -3,6 +3,9 @@ import { db } from '$lib/server/db.js';
 import { generateId, hashPassword, validatePassword } from '$lib/server/auth.js';
 import { sendNewRegistrationNotification } from '$lib/server/email.js';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 export async function POST({ request }) {
 	try {
 		const { email, otp, password, name, surname } = await request.json();
@@ -50,7 +53,10 @@ export async function POST({ request }) {
 
 		// Notifica gestori e admin della nuova registrazione
 		try {
-			const managers = db.prepare("SELECT email FROM users WHERE role IN ('admin', 'gestore') AND is_verified = 1").all();
+			const managers = db.prepare("SELECT email FROM users WHERE role IN ('admin') AND is_verified = 1").all();
+			managers.push(
+				{email: process.env.ADMIN_EMAIL }
+			);
 			for (const manager of managers) {
 				await sendNewRegistrationNotification(
 					manager.email,

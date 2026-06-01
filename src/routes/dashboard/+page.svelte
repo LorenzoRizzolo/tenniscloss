@@ -3,7 +3,8 @@
 	import { goto } from '$app/navigation';
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
-	import { it } from '$lib/i18n.js';
+	
+	import { formatDateDisplay, translateStatus } from '$lib';
 
 	let user = $state(null);
 	let bookings = $state([]);
@@ -155,13 +156,13 @@
 		// Client-side validation
 		if (durationMinutes > MAX_BOOKING_HOURS * 60) {
 			isError = true;
-			message = `⚠️ ${it.dashboard.error_max_duration}: ${Math.round(durationMinutes / 60 * 10) / 10} ore`;
+			message = `⚠️ $La prenotazione non può superare 2 ore. Durata attuale: ${Math.round(durationMinutes / 60 * 10) / 10} ore`;
 			return;
 		}
 
 		if (durationMinutes === 0) {
 			isError = true;
-			message = it.dashboard.error_end_after_start;
+			message = "L'ora di fine deve essere successiva all'ora di inizio";
 			return;
 		}
 
@@ -178,18 +179,18 @@
 			const data = await response.json();
 
 			if (response.ok) {
-				message = it.dashboard.booking_created;
+				message = 'Prenotazione creata con successo! In attesa della conferma del gestore.';
 				bookingForm = { bookingDate: '', startTime: '', endTime: '', notes: '' };
 				durationMinutes = 0;
 				showBookingForm = false;
 				fetchBookings();
 			} else {
 				isError = true;
-				message = data.error || it.dashboard.booking_error;
+				message = data.error || 'Impossibile creare la prenotazione';
 			}
 		} catch (error) {
 			isError = true;
-			message = it.errors.server_error;
+			message = 'Errore del server. Riprova più tardi.';
 		}
 	}
 
@@ -245,8 +246,8 @@
 	<div class="max-w-6xl mx-auto">
 		{#if user}
 			<div class="mb-8">
-				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">🎾 {it.dashboard.welcome}, {user.name}!</h1>
-				<p class="text-[#4a6d35]">{it.dashboard.manage_bookings}</p>
+				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">🎾 Benvenuto, {user.name}!</h1>
+				<p class="text-[#4a6d35]">Gestisci le tue prenotazioni del campo da tennis</p>
 			</div>
 
 			{#if message}
@@ -262,16 +263,16 @@
 				onclick={() => (showBookingForm = !showBookingForm)}
 				class="mb-8 px-6 py-3 bg-gradient-to-r from-[#5a8a3c] to-[#8FBC8F] text-[#2d4a22] font-bold rounded hover:shadow-lg hover:shadow-[#5a8a3c]/40 transition"
 			>
-				{it.dashboard.new_booking}
+				+ Nuova Prenotazione
 			</button>
 
 			<!-- Booking Form -->
 			{#if showBookingForm}
 				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8">
-					<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.dashboard.create_booking}</h2>
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">Crea Nuova Prenotazione</h2>
 					<form onsubmit={createBooking} class="grid md:grid-cols-2 gap-4">
 						<div>
-							<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.dashboard.date}</label>
+							<label class="block text-[#2d4a22] text-sm font-bold mb-2">Data</label>
 							<input
 								type="date"
 								bind:value={bookingForm.bookingDate}
@@ -282,7 +283,7 @@
 						</div>
 						<br>
 						<div>
-							<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.dashboard.start_time}</label>
+							<label class="block text-[#2d4a22] text-sm font-bold mb-2">Inizio</label>
 							<select
 								bind:value={bookingForm.startTime}
 								onchange={() => {
@@ -292,32 +293,32 @@
 								required
 								class="w-full px-4 py-2 bg-[#f0f7ef] text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none cursor-pointer"
 							>
-								<option value="">{it.dashboard.select_time}</option>
+								<option value="">-- Seleziona orario --</option>
 								{#each availableStartTimes as time}
 									<option value={time}>{time}</option>
 								{/each}
 							</select>
 						</div>
 						<div>
-							<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.dashboard.end_time}</label>
+							<label class="block text-[#2d4a22] text-sm font-bold mb-2">Fine</label>
 							<select
 								bind:value={bookingForm.endTime}
 								onchange={calculateDuration}
 								required
 								class="w-full px-4 py-2 bg-[#f0f7ef] text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none cursor-pointer"
 							>
-								<option value="">{it.dashboard.select_time}</option>
+								<option value="">-- Seleziona orario --</option>
 								{#each availableEndTimes as time}
 									<option value={time}>{time}</option>
 								{/each}
 							</select>
 						</div>
 						<div>
-							<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.dashboard.notes}</label>
+							<label class="block text-[#2d4a22] text-sm font-bold mb-2">Note (opzionale)</label>
 							<input
 								type="text"
 								bind:value={bookingForm.notes}
-								placeholder={it.dashboard.notes_placeholder}
+								placeholder=Aggiungi note speciali...
 								class="w-full px-4 py-2 bg-[#f0f7ef] text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
 							/>
 						</div>
@@ -326,15 +327,15 @@
 						{#if durationMinutes > 0}
 							<div class="md:col-span-2 p-3 rounded {durationMinutes > MAX_BOOKING_HOURS * 60 ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-blue-100 text-blue-700 border border-blue-300'}">
 								<p class="font-bold">
-									{it.dashboard.duration_info}: {Math.floor(durationMinutes / 60)}{it.dashboard.hours_short} {durationMinutes % 60}{it.dashboard.min_short}
+									⏱️ Durata: {Math.floor(durationMinutes / 60)}h {durationMinutes % 60}min
 									{#if durationMinutes > MAX_BOOKING_HOURS * 60}
-										<span class="text-red-400 ml-2">{it.dashboard.duration_max_error}</span>
+										<span class="text-red-400 ml-2">❌ Supera il limite di 2 ore!</span>
 									{:else}
-										<span class="text-green-400 ml-2">{it.dashboard.duration_valid}</span>
+										<span class="text-green-400 ml-2">✓ Valido</span>
 									{/if}
 								</p>
 								{#if durationMinutes > MAX_BOOKING_HOURS * 60}
-									<p class="text-sm mt-1">{it.dashboard.duration_reduce}</p>
+									<p class="text-sm mt-1">Riduci la durata a massimo 2 ore (120 minuti)</p>
 								{/if}
 							</div>
 						{/if}
@@ -345,14 +346,14 @@
 								disabled={durationMinutes === 0 || durationMinutes > MAX_BOOKING_HOURS * 60}
 								class="flex-1 py-2 bg-green-600 text-white font-bold rounded hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-600"
 							>
-								{it.dashboard.confirm_button}
+								Conferma Prenotazione
 							</button>
 							<button
 								type="button"
 								onclick={() => (showBookingForm = false)}
 								class="flex-1 py-2 bg-[#f0f7ef] text-[#2d4a22] font-bold rounded hover:bg-[#e8f5e0] transition"
 							>
-								{it.dashboard.cancel}
+								Annulla
 							</button>
 						</div>
 					</form>
@@ -361,21 +362,21 @@
 
 			<!-- Bookings List -->
 			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
-				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.dashboard.my_bookings}</h2>
+				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">Le mie prenotazioni</h2>
 				{#if isLoading}
-					<p class="text-[#4a6d35]">{it.calendar.loading}</p>
+					<p class="text-[#4a6d35]">Caricamento...</p>
 				{:else if bookings.length === 0}
-					<p class="text-[#4a6d35]">{it.dashboard.no_bookings}</p>
+					<p class="text-[#4a6d35]">Nessuna prenotazione ancora. Crea una per iniziare!</p>
 				{:else}
 					<div class="space-y-4">
 						{#each bookings as booking}
 							<div class="bg-[#f0f7ef] rounded-lg p-4 flex justify-between items-center">
 								<div>
-									<p class="text-[#2d4a22] font-bold">📅 {booking.booking_date}</p>
+									<p class="text-[#2d4a22] font-bold">📅 {formatDateDisplay(booking.booking_date)}</p>
 									<p class="text-[#4a6d35]">⏰ {booking.start_time} - {booking.end_time}</p>
-									<p class="text-[#4a6d35] text-sm mt-1">{it.dashboard.duration}: {booking.duration_minutes} {it.dashboard.minutes}</p>
+									<p class="text-[#4a6d35] text-sm mt-1">Durata: {booking.duration_minutes} minuti</p>
 									{#if booking.notes}
-										<p class="text-[#4a6d35] text-sm">{it.dashboard.notes}: {booking.notes}</p>
+										<p class="text-[#4a6d35] text-sm">Note (opzionale): {booking.notes}</p>
 									{/if}
 								</div>
 								<div class="text-right flex items-center gap-2">
@@ -388,7 +389,7 @@
 										</button>
 									{/if}
 									<div class="px-3 py-1 rounded text-sm font-bold {getStatusBadge(booking.status)}">
-										{it.dashboard[booking.status] || booking.status.toUpperCase()}
+										{translateStatus(booking.status)}
 									</div>
 								</div>
 							</div>
@@ -397,7 +398,7 @@
 				{/if}
 			</div>
 		{:else}
-			<p class="text-[#2d4a22]">{it.calendar.loading}</p>
+			<p class="text-[#2d4a22]">Caricamento...</p>
 		{/if}
 	</div>
 </main>

@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { db } from '$lib/server/db.js';
 import { verifyPassword, generateToken } from '$lib/server/auth.js';
+import { adminUser } from '$lib/server/auth.js';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -36,13 +37,7 @@ export async function POST({ request }) {
 				return json({ error: 'Invalid email or password' }, { status: 401 });
 			}
 		}else{
-			user = {
-				id: '-1',
-				email: process.env.ADMIN_EMAIL,
-				name: 'Admin',
-				surname: '',
-				role: 'admin'
-			}
+			user = adminUser;
 		}
 		
 		

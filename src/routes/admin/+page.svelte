@@ -3,7 +3,8 @@
 	import { goto } from '$app/navigation';
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
-	import { it } from '$lib/i18n.js';
+	
+	import { formatDateDisplay } from '$lib';
 
 	let user = $state(null);
 	let users = $state([]);
@@ -62,6 +63,7 @@
 			const bookingsRes = await fetch('/api/admin/bookings', { headers });
 			if (bookingsRes.ok) {
 				bookings = (await bookingsRes.json()).bookings || [];
+				console.log("bookings", bookings)
 			}
 
 			// Calculate stats
@@ -199,7 +201,7 @@
 
 		if (!newUserForm.email || !newUserForm.name || !newUserForm.surname) {
 			isError = true;
-			message = it.admin.required_fields;
+			message = 'Tutti i campi sono obbligatori';
 			return;
 		}
 
@@ -217,7 +219,7 @@
 
 			if (response.ok) {
 				createdPassword = data.user.tempPassword;
-				message = `${it.admin.user_created} | ${it.admin.temp_password}: ${data.user.tempPassword}`;
+				message = `$Utente creato con successo! | $Password temporanea: ${data.user.tempPassword}`;
 				newUserForm = { email: '', name: '', surname: '', password: '', role: 'utente' };
 				showAddUserForm = false;
 				showPassword = false;
@@ -226,22 +228,22 @@
 			} else {
 				isError = true;
 				if (data.error === 'Email already exists') {
-					message = it.errors.email_exists;
+					message = 'Email già registrata';
 				} else if (data.error === 'Invalid email format') {
-					message = it.errors.invalid_email;
+					message = 'Email non valida';
 				} else {
-					message = data.error || it.admin.user_error;
+					message = data.error || "Errore nella creazione dell'utente";
 				}
 			}
 		} catch (error) {
 			console.error('Error:', error);
 			isError = true;
-			message = it.errors.internal_error;
+			message = 'Errore interno del server';
 		}
 	}
 
 	async function deleteUser(userId) {
-		if (!confirm(it.admin.confirm_delete_user)) {
+		if (!confirm('Sei sicuro di voler eliminare questo utente? Questa azione è irreversibile!')) {
 			return;
 		}
 
@@ -254,13 +256,13 @@
 			});
 
 			if (response.ok) {
-				message = it.admin.user_deleted;
+				message = 'Utente eliminato con successo!';
 				isError = false;
 				await fetchData();
 			} else {
 				const data = await response.json();
 				isError = true;
-				message = data.error || it.admin.user_delete_error;
+				message = data.error || "Errore nell'eliminazione dell'utente";
 			}
 		} catch (error) {
 			console.error('Error deleting user:', error);
@@ -282,7 +284,7 @@
 
 		if (!editUserData.email || !editUserData.name || !editUserData.surname) {
 			editIsError = true;
-			editMessage = it.admin.required_fields;
+			editMessage = 'Tutti i campi sono obbligatori';
 			return;
 		}
 
@@ -330,7 +332,7 @@
 		{#if user}
 			<div class="mb-8">
 				<h1 class="text-4xl font-bold text-[#2d4a22] mb-2">🔑 Admin Dashboard</h1>
-				<p class="text-[#4a6d35]">{it.admin.management}</p>
+				<p class="text-[#4a6d35]">Gestione utenti e prenotazioni</p>
 			</div>
 
 			{#if message}
@@ -344,19 +346,19 @@
 			<!-- Stats Cards -->
 			<div class="grid md:grid-cols-4 gap-4 mb-8">
 				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
-					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">{it.admin.users}</h3>
+					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">Utenti</h3>
 					<p class="text-3xl font-bold text-[#2d4a22]">{stats.totalUsers || 0}</p>
 				</div>
 				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
-					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">{it.admin.bookings}</h3>
+					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">Prenotazioni</h3>
 					<p class="text-3xl font-bold text-[#2d4a22]">{stats.totalBookings || 0}</p>
 				</div>
 				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
-					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">{it.admin.pending}</h3>
+					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">Prenotazioni in Attesa</h3>
 					<p class="text-3xl font-bold text-yellow-600">{stats.pendingBookings || 0}</p>
 				</div>
 				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
-					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">{it.admin.confirmed}</h3>
+					<h3 class="text-[#4a6d35] text-sm font-bold mb-2">Prenotazioni Confermate</h3>
 					<p class="text-3xl font-bold text-green-600">{stats.confirmedBookings || 0}</p>
 				</div>
 			</div>
@@ -366,17 +368,17 @@
 				onclick={() => (showAddUserForm = !showAddUserForm)}
 				class="mb-6 px-4 py-2 bg-[#5a8a3c] text-white font-bold rounded hover:bg-[#4a7a2c] transition"
 			>
-				{it.admin.add_user}
+				+ Aggiungi Utente
 			</button>
 
 			<!-- Add User Form -->
 			{#if showAddUserForm}
 				<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8">
-					<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.admin.create_user}</h2>
+					<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">Crea Nuovo Utente</h2>
 					<form onsubmit={addUser} class="space-y-4">
 						<div class="grid md:grid-cols-2 gap-4">
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.name}</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Nome</label>
 								<input
 									type="text"
 									bind:value={newUserForm.name}
@@ -385,7 +387,7 @@
 								/>
 							</div>
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.surname}</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Cognome</label>
 								<input
 									type="text"
 									bind:value={newUserForm.surname}
@@ -394,7 +396,7 @@
 								/>
 							</div>
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.email}</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Email</label>
 								<input
 									type="email"
 									bind:value={newUserForm.email}
@@ -403,7 +405,7 @@
 								/>
 							</div>
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.admin.role}</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Ruolo</label>
 								<select
 									bind:value={newUserForm.role}
 									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
@@ -414,7 +416,7 @@
 								</select>
 							</div>
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.admin.password} (temporanea)</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Password (temporanea)</label>
 								<div class="relative">
 									<input
 										type={showPassword ? 'text' : 'password'}
@@ -445,14 +447,14 @@
 								type="submit"
 								class="flex-1 py-2 bg-green-600 text-white font-bold rounded hover:bg-green-700"
 							>
-								{it.admin.create_user}
+								Crea Nuovo Utente
 							</button>
 							<button
 								type="button"
 								onclick={() => (showAddUserForm = false)}
 								class="flex-1 py-2 bg-[#f0f7ef] text-[#2d4a22] font-bold rounded hover:bg-[#e8f5e0] transition"
 							>
-								{it.dashboard.cancel}
+								Annulla
 							</button>
 						</div>
 					</form>
@@ -471,7 +473,7 @@
 						{/if}
 						<form onsubmit={saveUserEdit} class="space-y-4">
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.name}</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Nome</label>
 								<input
 									type="text"
 									bind:value={editUserData.name}
@@ -480,7 +482,7 @@
 								/>
 							</div>
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.surname}</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Cognome</label>
 								<input
 									type="text"
 									bind:value={editUserData.surname}
@@ -489,7 +491,7 @@
 								/>
 							</div>
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.auth.email}</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Email</label>
 								<input
 									type="email"
 									bind:value={editUserData.email}
@@ -498,14 +500,14 @@
 								/>
 							</div>
 							<div>
-								<label class="block text-[#2d4a22] text-sm font-bold mb-2">{it.admin.role}</label>
+								<label class="block text-[#2d4a22] text-sm font-bold mb-2">Ruolo</label>
 								<select
 									bind:value={editUserData.role}
 									class="w-full px-4 py-2 bg-white text-[#2d4a22] rounded border border-[#c8e6c0] focus:border-[#5a8a3c] outline-none"
 								>
-									<option value="utente">{it.admin.user_role}</option>
-									<option value="gestore">{it.admin.manager_role}</option>
-									<option value="admin">{it.admin.admin_role}</option>
+									<option value="utente">Utente</option>
+									<option value="gestore">Gestore</option>
+									<option value="admin">Admin</option>
 								</select>
 							</div>
 							<div class="flex gap-4">
@@ -520,7 +522,7 @@
 									onclick={() => (showEditUserForm = false)}
 									class="flex-1 py-2 bg-[#f0f7ef] text-[#2d4a22] font-bold rounded hover:bg-[#e8f5e0] transition"
 								>
-									{it.dashboard.cancel}
+									Annulla
 								</button>
 							</div>
 						</form>
@@ -530,17 +532,17 @@
 
 			<!-- Users Table -->
 			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6 mb-8">
-				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">{it.admin.users} ({users.length})</h2>
+				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">Utenti ({users.length})</h2>
 				<div class="overflow-x-auto">
 					<table class="w-full text-left text-[#4a6d35]">
 						<thead class="border-b border-[#c8e6c0]">
 							<tr>
-								<th class="pb-3">{it.auth.email}</th>
-								<th class="pb-3">{it.auth.name}</th>
-								<th class="pb-3">{it.admin.role}</th>
-								<th class="pb-3">{it.admin.verified}</th>
+								<th class="pb-3">Email</th>
+								<th class="pb-3">Nome</th>
+								<th class="pb-3">Ruolo</th>
+								<th class="pb-3">Verificato</th>
 								<th class="pb-3">Approvato</th>
-								<th class="pb-3">{it.admin.actions}</th>
+								<th class="pb-3">Azioni</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -578,9 +580,9 @@
 											<button
 												onclick={() => deleteUser(userItem.id)}
 												class="px-2 py-1 bg-red-600 hover:bg-red-600 text-white rounded text-xs font-bold transition"
-												title={it.admin.delete_user}
+												title=🗑️ Elimina
 											>
-												{it.admin.delete_user}
+												🗑️ Elimina
 											</button>
 											<button
 												onclick={() => editUser(userItem)}
@@ -600,23 +602,23 @@
 
 			<!-- Bookings Table -->
 			<div class="bg-white border border-[#c8e6c0] rounded-lg p-6">
-				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">⚙️ {it.admin.bookings} ({bookings.length})</h2>
+				<h2 class="text-2xl font-bold text-[#2d4a22] mb-6">⚙️ Prenotazioni ({bookings.length})</h2>
 				<p class="text-[#4a6d35] text-sm mb-4">Gestisci le prenotazioni: conferma o cancella</p>
 				<div class="overflow-x-auto">
 					<table class="w-full text-left text-[#4a6d35] text-sm">
 						<thead class="border-b border-[#c8e6c0]">
 							<tr>
-								<th class="pb-3">{it.dashboard.date}</th>
-								<th class="pb-3">{it.dashboard.start_time}</th>
-								<th class="pb-3">{it.admin.users}</th>
-								<th class="pb-3">{it.dashboard.status}</th>
+								<th class="pb-3">Data</th>
+								<th class="pb-3">Inizio</th>
+								<th class="pb-3">Utenti</th>
+								<th class="pb-3">Stato</th>
 								<th class="pb-3">Azioni</th>
 							</tr>
 						</thead>
 						<tbody>
 							{#each bookings as booking}
 								<tr class="border-b border-[#c8e6c0] hover:bg-[#e8f5e0]">
-									<td class="py-3">{booking.booking_date}</td>
+									<td class="py-3">{formatDateDisplay(booking.booking_date)}</td>
 									<td class="py-3">{booking.start_time} - {booking.end_time}</td>
 									<td class="py-3">{booking.name} {booking.surname}</td>
 									<td class="py-3">

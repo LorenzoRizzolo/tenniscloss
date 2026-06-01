@@ -32,12 +32,10 @@
 				{#if userRole === 'admin'}
 					<a href="/admin" class="text-[#4a6d35] hover:text-[#2d4a22] transition">Admin</a>
 				{/if}
-				{#if userRole === 'gestore' || userRole === 'admin'}
+				{#if userRole === 'gestore'}
 					<a href="/gestore" class="text-[#4a6d35] hover:text-[#2d4a22] transition">Gestore</a>
 				{/if}
-				{#if userRole != 'admin'}
-					<a href="/dashboard" class="text-[#4a6d35] hover:text-[#2d4a22] transition">Dashboard</a>
-				{/if}
+				<a href="/dashboard" class="text-[#4a6d35] hover:text-[#2d4a22] transition">Dashboard</a>
 				<a href="/calendar" class="text-[#4a6d35] hover:text-[#2d4a22] transition">📅 Calendario</a>
 				<button
 					onclick={logout}

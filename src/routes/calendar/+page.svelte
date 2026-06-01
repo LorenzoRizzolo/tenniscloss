@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation';
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
-	import { it } from '$lib/i18n.js';
+	
 
 	let user = $state(null);
 	let currentDate = $state(null);

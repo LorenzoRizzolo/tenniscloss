@@ -117,6 +117,7 @@ export const it = {
 		pending_bookings: 'Prenotazioni in Attesa',
 		confirmed_bookings: 'Prenotazioni Confermate',
 		add_user: '+ Aggiungi Utente',
+		create_user: 'Crea Nuovo Utente',
 		users: 'Utenti',
 		bookings: 'Prenotazioni',
 		role: 'Ruolo',

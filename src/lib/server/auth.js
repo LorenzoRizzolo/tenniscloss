@@ -1,6 +1,14 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 
+export const adminUser = {
+				id: '-1',
+				email: process.env.ADMIN_EMAIL,
+				name: 'Amministratore',
+                surname: '',
+                role: 'admin'
+            }
+
 export function generateId() {
 	return crypto.randomBytes(16).toString('hex');
 }

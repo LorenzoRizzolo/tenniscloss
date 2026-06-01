@@ -1,6 +1,7 @@
 <script>
 	import Navbar from '$components/Navbar.svelte';
 	import Footer from '$components/Footer.svelte';
+	import { formatTimestampDisplay } from '$lib';
 </script>
 
 <svelte:head>
@@ -70,7 +71,7 @@
 
 				<section class="pt-6 border-t border-[#c8e6c0]">
 					<p class="text-sm text-[#4a6d35]">
-						Last updated: {new Date().toLocaleDateString()}
+						Last updated: {formatTimestampDisplay(new Date().toISOString())}
 					</p>
 				</section>
 			</div>
